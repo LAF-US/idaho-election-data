@@ -1,0 +1,12 @@
+Precinct,"Yes
+None/Unknown","No
+None/Unknown","Total Votes Cast",Undervotes,Overvotes,"Total Ballots Cast"
+"01 N. End",969,144,"1,113",150,0,"1,263"
+"02 W. Central",691,94,785,150,0,935
+"03 Northeast Central",440,55,495,136,0,631
+"04 Driggs",667,145,812,189,0,"1,001"
+"05 Southeast Central",625,90,715,171,0,886
+"06 Victor",629,132,761,212,1,974
+"07 S. End",769,112,881,222,0,"1,103"
+Totals,"4,790",772,"5,562","1,230",1,"6,793"
+

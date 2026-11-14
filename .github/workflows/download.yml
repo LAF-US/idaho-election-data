@@ -1,0 +1,33 @@
+name: Download canvass site
+on:
+  push:
+    branches: [download]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    steps:
+      - name: Get the repo
+        env:
+          TOKEN: ${{ github.token }}
+        run: |
+          AUTH=$(printf 'x-access-token:%s' "$TOKEN" | base64 -w0)
+          echo "::add-mask::$AUTH"
+          git init -q .
+          git config http.https://github.com/.extraheader "AUTHORIZATION: basic $AUTH"
+          git remote add origin "https://github.com/$GITHUB_REPOSITORY"
+          git fetch -q --depth=1 origin "$GITHUB_REF_NAME"
+          git checkout -q -B "$GITHUB_REF_NAME" FETCH_HEAD
+      - name: Download every file the canvass site links to
+        run: timeout 340m python3 -I download.py canvass.sos.idaho.gov || echo "Stopped before finishing; saving what was downloaded."
+      - name: Save the files to the repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add canvass.sos.idaho.gov
+          git diff --cached --quiet && { echo "Nothing downloaded."; exit 0; }
+          git commit -q -m "Canvass site files as downloaded"
+          git push origin "HEAD:$GITHUB_REF_NAME"
