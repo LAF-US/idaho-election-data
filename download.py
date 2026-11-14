@@ -29,7 +29,7 @@ class Links(html.parser.HTMLParser):
 def fetch(url):
     req = urllib.request.Request(url, headers={'User-Agent': 'canvass-download'})
     with urllib.request.urlopen(req, timeout=180) as r:
-        return r.headers, r.read()
+        return r.geturl(), r.headers, r.read()
 
 
 def filename(url, headers):
@@ -53,7 +53,7 @@ def main(out):
     while queue:
         url = queue.popleft()
         try:
-            headers, body = fetch(url)
+            url, headers, body = fetch(url)  # url becomes the address after any redirect
         except Exception as e:
             failed += 1
             print(f'FAILED {url}: {e}', flush=True)
@@ -71,12 +71,17 @@ def main(out):
                     queue.append(link)
         else:
             folder, name = filename(url, headers)
-            d = os.path.join(out, folder)
-            os.makedirs(d, exist_ok=True)
-            with open(os.path.join(d, name), 'wb') as f:
-                f.write(body)
-            saved += 1
-            print(f'saved {os.path.join(folder, name)} ({len(body)} bytes) from {url}', flush=True)
+            try:
+                d = os.path.join(out, folder)
+                os.makedirs(d, exist_ok=True)
+                with open(os.path.join(d, name), 'wb') as f:
+                    f.write(body)
+            except OSError as e:
+                failed += 1
+                print(f'FAILED to save {url}: {e}', flush=True)
+            else:
+                saved += 1
+                print(f'saved {os.path.join(folder, name)} ({len(body)} bytes) from {url}', flush=True)
         if (pages + saved + failed) % 100 == 0:
             print(f'-- {pages} pages read, {saved} files saved, {failed} failed, {len(queue)} links left', flush=True)
     print(f'Done: {pages} pages read, {saved} files saved, {failed} failed.')

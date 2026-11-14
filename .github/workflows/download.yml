@@ -27,6 +27,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          [ -d canvass.sos.idaho.gov ] || { echo "Nothing downloaded."; exit 0; }
           git add canvass.sos.idaho.gov
           git diff --cached --quiet && { echo "Nothing downloaded."; exit 0; }
           git commit -q -m "Canvass site files as downloaded"
