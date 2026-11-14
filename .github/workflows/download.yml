@@ -5,6 +5,9 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+  actions: write
+concurrency:
+  group: download-canvass
 jobs:
   download:
     runs-on: ubuntu-latest
@@ -22,13 +25,27 @@ jobs:
           git fetch -q --depth=1 origin "$GITHUB_REF_NAME"
           git checkout -q -B "$GITHUB_REF_NAME" FETCH_HEAD
       - name: Download every file the canvass site links to
-        run: timeout 340m python3 -I download.py canvass.sos.idaho.gov || echo "Stopped before finishing; saving what was downloaded."
+        id: download
+        env:
+          MINUTES: "320"
+        run: |
+          code=0
+          python3 -I download.py canvass.sos.idaho.gov || code=$?
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          [ "$code" = 0 ] || [ "$code" = 3 ] || echo "The script stopped with an error; saving what was downloaded."
       - name: Save the files to the repo
+        id: save
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
           [ -d canvass.sos.idaho.gov ] || { echo "Nothing downloaded."; exit 0; }
           git add canvass.sos.idaho.gov
-          git diff --cached --quiet && { echo "Nothing downloaded."; exit 0; }
+          git diff --cached --quiet && { echo "Nothing new downloaded."; exit 0; }
           git commit -q -m "Canvass site files as downloaded"
           git push origin "HEAD:$GITHUB_REF_NAME"
+          echo "pushed=1" >> "$GITHUB_OUTPUT"
+      - name: Start the next run for the links left
+        if: steps.download.outputs.code == '3' && steps.save.outputs.pushed == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run download.yml --ref "$GITHUB_REF_NAME" -R "$GITHUB_REPOSITORY"
