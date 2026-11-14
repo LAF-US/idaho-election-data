@@ -1,0 +1,466 @@
+/* CSS Document */
+
+
+/**
+ * Fonts
+ */
+
+/*
+@font-face {
+	font-family: 'Chaparral Pro';
+	src: url('/fonts/ChaparralPro-Bold.eot');
+	src: url('/fonts/ChaparralPro-Bold.eot?#iefix') format('embedded-opentype'),
+	url('/fonts/ChaparralPro-Bold.woff') format('woff'),
+	url('/fonts/ChaparralPro-Bold.ttf') format('truetype');
+	font-weight: bold;
+	font-style: normal;
+}
+*/
+
+@font-face {
+	font-family: 'Chaparral Pro';
+	src: url('/fonts/ChaparralPro-Regular.eot');
+	src: url('/fonts/ChaparralPro-Regular.eot?#iefix') format('embedded-opentype'),
+	url('/fonts/ChaparralPro-Regular.woff') format('woff'),
+	url('/fonts/ChaparralPro-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+
+
+/**
+ * Structural adjustments
+ */
+ 
+body {
+	background-color: #DDD; /***/
+	 
+}
+
+
+#top_bar_wrapper,#content_wrapper,#footer_wrapper {
+	background: none;
+	margin-left: 0px;
+	margin-right: 0px;
+}
+#content_wrapper {
+	margin-top: 0px;
+	padding-top: 16px;
+	
+}
+#footer_wrapper {
+	
+}
+#top_bar_wrapper {
+	margin-top: 0px;	
+	border-bottom: none;
+}
+#top_bar_wrapper > .inner {
+	padding-top: 0px;	
+}
+
+
+
+
+/**
+ * Header
+ */
+ 
+.banner_top {
+	height: 55px;	
+	 
+	background-color: #111;
+	overflow: hidden;
+}
+.banner_top > .left {
+	float: left;
+	width: 677px;
+	height: 55px;	
+	
+	/* You can place an image logo here for state-specific sites
+	background:url('/img/us_states/EX/banner_top_left.jpg') 0px 0px no-repeat;
+	*/
+}
+.banner_top > .left a {
+	text-decoration: none;
+	display: block;
+	color: #FFF;
+}
+.banner_top > .left a:hover,
+.banner_top > .left a:active {
+	text-decoration: underline;	
+}
+
+.banner_top > .left .site-title {
+	display: block;
+	margin: 16px 0 0 16px;	
+	font-size: 16px;
+}
+
+.banner_top > .left img.spacer {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	
+	display: none;	
+}
+ 
+.banner_top > .right {
+	float: right;
+	width: 157px;
+	height: 55px;	
+	 
+}
+
+/**
+ * Footer
+ */
+.banner_bottom {
+	font-size: 13px;
+	font-weight: bold;
+}
+.banner_bottom a {
+	font-weight: normal;	
+}
+
+
+
+/**
+ * Homepage
+ */
+
+
+body.controller_pages.action_index #page_wrapper {
+	 
+	
+	/**
+	min-width: 1220px;
+	max-width: 1600px;
+	**/
+	width: 1280px; /* note this exceeds the 960px width of the agency site **/
+	margin: 0 auto;
+	 
+}
+
+body.controller_pages.action_index #content_wrapper {
+	background: #FFFFFF url('/img/us_states/EX/us-flag-stand.png') 180px 40px no-repeat;
+}
+
+body.controller_pages.action_index .single-column {
+	margin: 0px 0px;	
+}
+body.controller_pages.action_index .row-top {
+	position: relative;
+	min-height: 600px;	
+}
+body.controller_pages.action_index .row-top > div {
+	position: relative;
+	left: 480px; /**/
+	top: 70px;
+	width: 605px;
+	max-width: 605px;	
+	text-align: left;
+}
+body.controller_pages.action_index .row-top > div.flash-message {
+	margin: 0px;
+	position: absolute;
+	*left: 300px;
+	top: 0px;
+	width: 90%;
+	max-width: 576px;
+}
+
+
+
+
+body.controller_pages.action_index #home_headline_main {
+	background: none;
+	min-width: 680px;
+	max-width: none;
+	margin-top: 50px;
+	margin-bottom: 34px;
+
+}
+
+
+body.controller_pages.action_index #home_headline_main h1 {
+	font-size: 92px;
+	color: #003045;
+	font-family: "Chaparral Pro", Helvetica, Verdana, Arial, sans-serif;
+	font-weight: bold;
+	line-height: 0.9em;
+	text-shadow: 2px 2px 2px #AAA;
+}
+
+body.controller_pages.action_index #home_headline_main span {
+	color: #30659B;
+}
+
+
+body.controller_pages.action_index #home_subheadline_main {
+	margin-bottom: 50px;
+
+	font-size: 18px;
+	color: #767676;
+	letter-spacing: -1px;
+	min-height: 40px;
+	line-height: 120%;
+}
+
+body.controller_pages.action_index #home_subheadline_main a.learn-more {
+	font-size: 80%;
+}
+
+#elstats_logo_icon tbody {
+	border: none;
+}
+#elstats_logo_icon td {
+	padding: 0px;
+	vertical-align: bottom;
+	border: none;
+
+}
+#elstats_logo_icon td div:nth-child(1) {
+	width: 17px;
+
+}
+#elstats_logo_icon .bar {
+	width: 17px;
+	background-color: #30659B;
+	vertical-align: bottom;
+	margin-right: 3px;
+}
+#elstats_logo_icon td:nth-child(1) .bar {
+	height: 20px;
+}
+#elstats_logo_icon td:nth-child(2) .bar {
+	height: 30px;
+}
+#elstats_logo_icon td:nth-child(3) .bar {
+	height: 40px;
+}
+#home_subheadline_main #elstats_logo_icon {
+	float: left;
+	position: relative;
+
+	margin-right: 0.5em;
+}
+
+body.controller_pages.action_index #home_subheadline_main > .inner {
+	position: relative;
+
+	padding-top: 0px;
+}
+body.controller_pages.action_index #home_subheadline_main a {
+	text-decoration: underline;
+	cursor: pointer;	
+}
+
+body.controller_pages.action_index #home_search_main {
+	margin-left: 20px;
+}
+body.controller_pages.action_index #home_search_main > div {
+	position: relative;
+	float: left;
+	 
+}
+body.controller_pages.action_index #home_search_main > div.description {
+	width: 230px;
+	height: 250px;
+	min-height: 250px;
+	padding-top: 16px;
+	padding-right: 20px;
+	
+	
+	/*background:url('/img/us_states/EX/home_arrow_to_search.png') 104px 112px no-repeat;
+	*/
+	
+	font-size: 16px;
+	line-height: 140%;
+	letter-spacing: -1px;
+	color: #444;
+	text-align: right;
+}
+body.controller_pages.action_index #home_search_main > div.description h2 {
+	position: relative;
+	font-weight: bold;
+	font-size: 20px;	
+	 
+	margin-bottom: 1em;
+	line-height: 40%;
+	color: #06353C;
+	text-align: right;
+}
+
+
+
+body.controller_pages.action_index #home_search_main > div.description p {
+	position: relative;
+	margin-top: 0;
+	color: #555;
+}
+
+body.controller_pages.action_index #home_search_main > div.search_box {
+	position: relative;
+	margin-left: 0px;
+}
+body.controller_pages.action_index #home_search_main > div.search_box #search_tabs {
+	margin-left: 0px;
+}
+body.controller_pages.action_index #home_search_main > div.search_box .search_controls {
+	border-left: 1px #9AB9E7 solid;
+	border-right: 1px #9AB9E7 solid;	
+}
+
+body.controller_pages.action_index #home_search_main > div.search_box .search_controls > .inner {
+	box-shadow: #777 4px 4px 8px;
+}
+
+/**
+ * Responsive: medium screens
+ */
+@media screen and (max-width:1280px) {
+	body.controller_pages.action_index #page_wrapper {
+		 
+		
+		width: 960px;
+		max-width: 99%; /* note this exceeds the 960px width of the agency site ***/
+		margin: 0 auto;
+		 
+	}
+	
+	body.controller_pages.action_index #content_wrapper {
+		background-position: -57px 40px;
+	}
+	body.controller_pages.action_index .row-top > div {
+		position: relative;
+		left: 260px;
+		top: 70px;
+		width: 605px;
+		max-width: 605px;	
+		text-align: left;
+	}
+	body.controller_pages.action_index #home_headline_main { 
+
+		/* background:url('/img/us_states/EX/home_headline_main.png') 0px 0px no-repeat; */
+
+	}
+	body.controller_pages.action_index #home_subheadline_main {
+
+		/* background:url('/img/us_states/EX/home_logo.png') 0px 6px no-repeat; */
+		font-size: 18px;
+		color: #888; 
+		letter-spacing: -1px;
+	}
+}
+
+
+@media screen and (max-width:960px) {
+	body.controller_pages.action_index .row-top > div,
+	body.controller_pages.action_index #home_headline_main h1,
+	body.controller_pages.action_index #home_search_main > div.description h2 {
+
+		text-align: center;
+	}
+
+	body.controller_pages.action_index #home_headline_main {
+		margin-top: 0px;
+	}
+	body.controller_pages.action_index #home_subheadline_main {
+		text-align: left;
+		margin-bottom: 50px;
+	}
+}
+@media screen and (max-width:750px) {
+	body.controller_pages.action_index #home_headline_main {
+		width: auto;
+		min-width: 200px;
+		font-size: 65px;
+	}
+}
+
+/**
+ * Bottom half (dark bg)
+ */
+body.controller_pages.action_index .row-bottom {
+	background-color: #111;
+	color: #CCC;
+	min-height: 200px;
+	margin-top: 32px;
+}
+body.controller_pages.action_index .row-bottom p {
+	color: #CCC;
+}
+body.controller_pages.action_index .row-bottom a:link,
+body.controller_pages.action_index .row-bottom a:visited {
+	color: #87B5CC;
+}
+body.controller_pages.action_index .row-bottom a:hover,
+body.controller_pages.action_index .row-bottom a:active {
+	color: #A1D7F5;
+}
+
+body.controller_pages.action_index .row-bottom .one-third {
+	
+}
+
+body.controller_pages.action_index .row-bottom .one-third > .inner {
+	margin: 20px 0px;
+	padding: 0px 20px;
+	border-right: 1px #6D6244 dotted;
+	min-height: 180px;	
+}
+body.controller_pages.action_index .row-bottom .one-third.last > .inner {
+	border-right: none;
+}
+body.controller_pages.action_index #page_wrapper .row-bottom h2 {
+	color: #F2EDDE;
+	font-weight: bold;
+	font-size: 18px;
+	line-height: 120%;	
+}
+
+
+/**
+ * Recent Elections
+ */
+
+body.controller_pages.action_index .row-bottom #search_results_table tbody {
+	background: none;
+}
+body.controller_pages.action_index .row-bottom #search_results_table tbody td {
+	border: none;
+}
+
+body.controller_pages.action_index .row-bottom #search_results_table tbody .info {
+	background: none;
+	border: none;
+	padding: 0;
+	color: #888;
+}
+
+
+body.controller_pages.action_index .row-bottom #search_results_table.is_list_output {
+	color: #BBB;
+}
+body.controller_pages.action_index .row-bottom #search_results_table.is_list_output .candidates_preview {
+	color: #EFEFEF;
+}
+body.controller_pages.action_index .row-bottom #search_results_table.is_list_output .candidates_preview a {
+	font-size: 11px;
+}
+body.controller_pages.action_index .row-bottom .more_links {
+	position: relative;
+	margin-top: 18px;	
+}
+
+/**
+ * What's In this site?
+ */
+body.controller_pages.action_index #page_wrapper .row-bottom .counts td.value {
+	color:#FFF;
+}
+body.controller_pages.action_index #page_wrapper .row-bottom .counts td.name {
+	color: #CCC;
+}
