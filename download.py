@@ -2,9 +2,11 @@
 """Download the canvass site's search exports, as the site serves them.
 
 The site's search pages (Contests, Ballot Questions, Voter Statistics) each offer a CSV of their
-results, and the address takes a year range. This asks for 1990 through 2024 (the site's whole
-year list) at both breakdowns the pages link to (show_granularity_dt_id 3 and 7). If one export
-comes back too big for GitHub (over 95 MB), it asks for that export one year at a time instead.
+results at two breakdowns (show_granularity_dt_id 3 = county, 7 = precinct). The site only offers
+an export when a search has fewer than 1,000 results, so this asks for one year at a time, for
+every even year in the site's year list (1990 through 2024). Before each year's export it reads
+that year's search page and skips the export, as a failure, if the page says the search is over
+the limit.
 
 Each file goes in a folder that mirrors its address on the site, under the name the site gives it.
 
@@ -16,11 +18,15 @@ SITE = 'https://canvass.sos.idaho.gov'
 TABS = ['contests', 'ballot_questions', 'voter_stats']
 BREAKDOWNS = [3, 7]
 FIRST, LAST = 1990, 2024
-TOO_BIG = 95_000_000  # GitHub refuses files over 100 MB
+OVER_LIMIT = b'narrow your search'  # the site's text when a search has 1,000 results or more
 
 
-def export_url(tab, breakdown, first, last):
-    return f'{SITE}/eng/{tab}/search/year_from:{first}/year_to:{last}/show_granularity_dt_id:{breakdown}/.csv'
+def search_url(tab, year):
+    return f'{SITE}/eng/{tab}/search/year_from:{year}/year_to:{year}'
+
+
+def export_url(tab, year, breakdown):
+    return f'{search_url(tab, year)}/show_granularity_dt_id:{breakdown}/.csv'
 
 
 def fetch(url):
@@ -64,16 +70,17 @@ def get(out, url):
 def main(out):
     failed = 0
     for tab in TABS:
-        for breakdown in BREAKDOWNS:
-            url = export_url(tab, breakdown, FIRST, LAST)
-            got = get(out, url)
-            if got and len(got[1]) <= TOO_BIG:
-                save(out, url, *got)
+        for year in range(FIRST, LAST + 1, 2):
+            page = get(out, search_url(tab, year))
+            if not page:
+                failed += 1
                 continue
-            if got:
-                print(f'{url} is {len(got[1]):,} bytes, too big for GitHub; asking one year at a time', flush=True)
-            for year in range(FIRST, LAST + 1, 2):
-                url = export_url(tab, breakdown, year, year)
+            if OVER_LIMIT in page[1]:
+                print(f'OVER THE LIMIT {search_url(tab, year)}: the site offers no export; skipped', flush=True)
+                failed += 1
+                continue
+            for breakdown in BREAKDOWNS:
+                url = export_url(tab, year, breakdown)
                 got = get(out, url)
                 if got:
                     save(out, url, *got)
