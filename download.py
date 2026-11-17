@@ -5,8 +5,10 @@ The site's search pages (Contests, Ballot Questions, Voter Statistics) each offe
 results at two breakdowns (show_granularity_dt_id 3 = county, 7 = precinct). The site only offers
 an export when a search has fewer than 1,000 results, so this asks for one year at a time, for
 every even year in the site's year list (1990 through 2024). Before each year's export it reads
-that year's search page and skips the export, as a failure, if the page says the search is over
-the limit.
+that year's search page. If the page says the search is over the limit, it asks for that year one
+county at a time instead, with the site's own county filter (filter_by_division_id), using the
+county numbers from the page's county list. A county search that is still over the limit is
+skipped, as a failure.
 
 Each file goes in a folder that mirrors its address on the site, under the name the site gives it.
 
@@ -21,12 +23,31 @@ FIRST, LAST = 1990, 2024
 OVER_LIMIT = b'narrow your search'  # the site's text when a search has 1,000 results or more
 
 
-def search_url(tab, year):
-    return f'{SITE}/eng/{tab}/search/year_from:{year}/year_to:{year}'
+COUNTIES = ['Ada', 'Adams', 'Bannock', 'Bear Lake', 'Benewah', 'Bingham', 'Blaine', 'Boise',
+            'Bonner', 'Bonneville', 'Boundary', 'Butte', 'Camas', 'Canyon', 'Caribou', 'Cassia',
+            'Clark', 'Clearwater', 'Custer', 'Elmore', 'Franklin', 'Fremont', 'Gem', 'Gooding',
+            'Idaho', 'Jefferson', 'Jerome', 'Kootenai', 'Latah', 'Lemhi', 'Lewis', 'Lincoln',
+            'Madison', 'Minidoka', 'Nez Perce', 'Oneida', 'Owyhee', 'Payette', 'Power', 'Shoshone',
+            'Teton', 'Twin Falls', 'Valley', 'Washington']
 
 
-def export_url(tab, year, breakdown):
-    return f'{search_url(tab, year)}/show_granularity_dt_id:{breakdown}/.csv'
+def search_url(tab, year, county=None):
+    url = f'{SITE}/eng/{tab}/search/year_from:{year}/year_to:{year}'
+    return f'{url}/filter_by_division_id:{county}' if county else url
+
+
+def export_url(search, breakdown):
+    return f'{search}/show_granularity_dt_id:{breakdown}/.csv'
+
+
+def county_ids(page):
+    """The site's number for each county, read from the county list on a search page."""
+    found = {}
+    for value, name in re.findall(rb'<option[^>]*value="(\d+)"[^>]*>\s*([^<]+?)\s*</option>', page):
+        name = name.decode('utf-8', 'replace')
+        if name in COUNTIES and name not in found:
+            found[name] = value.decode()
+    return found
 
 
 def fetch(url):
@@ -67,25 +88,45 @@ def get(out, url):
     return headers, body
 
 
+def exports(out, search):
+    """Save a search's exports. Returns the number of failures."""
+    failed = 0
+    for breakdown in BREAKDOWNS:
+        url = export_url(search, breakdown)
+        got = get(out, url)
+        if got:
+            save(out, url, *got)
+        else:
+            failed += 1
+    return failed
+
+
 def main(out):
     failed = 0
     for tab in TABS:
         for year in range(FIRST, LAST + 1, 2):
-            page = get(out, search_url(tab, year))
+            search = search_url(tab, year)
+            page = get(out, search)
             if not page:
                 failed += 1
                 continue
-            if OVER_LIMIT in page[1]:
-                print(f'OVER THE LIMIT {search_url(tab, year)}: the site offers no export; skipped', flush=True)
-                failed += 1
+            if OVER_LIMIT not in page[1]:
+                failed += exports(out, search)
                 continue
-            for breakdown in BREAKDOWNS:
-                url = export_url(tab, year, breakdown)
-                got = get(out, url)
-                if got:
-                    save(out, url, *got)
-                else:
+            counties = county_ids(page[1])
+            print(f'OVER THE LIMIT {search}: asking one county at a time '
+                  f'({len(counties)} of {len(COUNTIES)} counties found in the page)', flush=True)
+            failed += len(COUNTIES) - len(counties)
+            for name, county in counties.items():
+                search = search_url(tab, year, county)
+                page = get(out, search)
+                if not page:
                     failed += 1
+                elif OVER_LIMIT in page[1]:
+                    print(f'OVER THE LIMIT {search} ({name}): skipped', flush=True)
+                    failed += 1
+                else:
+                    failed += exports(out, search)
     print(f'Done, {failed} failed.')
     return 1 if failed else 0
 
