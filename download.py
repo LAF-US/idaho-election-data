@@ -11,6 +11,11 @@ year is over that limit, it reads that year one county at a time instead, with t
 county filter (filter_by_division_id), using the county numbers from the page's county list.
 Then, for each contest number, it reads the contest's page and saves every download the page links.
 
+Then it checks every number from 1 up to the highest number listed that has no saved folder in any
+tab, because the site's own count (12,556 contests on its home page) is higher than what its search
+pages list (12,530). For each such number it reads that number's page in each tab and saves any
+download the page links; it prints what the site answered for numbers with nothing to save.
+
 A contest whose download folder already exists in OUTDIR is skipped, so a later run picks up where
 an earlier one stopped. The run stops starting new contests after MINUTES minutes.
 
@@ -18,7 +23,7 @@ Each file goes in a folder that mirrors its address on the site, under the name 
 
   python3 download.py OUTDIR [MINUTES]
 """
-import hashlib, os, re, sys, time, urllib.parse, urllib.request
+import concurrent.futures, hashlib, html, os, re, sys, time, urllib.error, urllib.parse, urllib.request
 
 SITE = 'https://canvass.sos.idaho.gov'
 TABS = ['contests', 'ballot_questions', 'voter_stats']
@@ -86,12 +91,97 @@ def save(out, url, headers, body):
           f'sha256 {hashlib.sha256(body).hexdigest()[:12]}', flush=True)
 
 
-def get(url):
-    try:
-        return fetch(url)
-    except Exception as e:
-        print(f'FAILED {url}: {e}', flush=True)
-        return None
+def get(url, tries=3):
+    """The page, or None. A 5xx answer from the site is tried again after a pause."""
+    for attempt in range(tries):
+        try:
+            return fetch(url)
+        except urllib.error.HTTPError as e:
+            if e.code < 500 or attempt == tries - 1:
+                print(f'FAILED {url}: {e}', flush=True)
+                return None
+        except Exception as e:
+            if attempt == tries - 1:
+                print(f'FAILED {url}: {e}', flush=True)
+                return None
+        time.sleep(15 * (attempt + 1))
+
+
+def answer(url):
+    """What the site gives for a page: ('ok', headers, body), ('http NNN', None, None) or ('failed', ...)."""
+    for attempt in range(3):
+        try:
+            h, b = fetch(url)
+            return 'ok', h, b
+        except urllib.error.HTTPError as e:
+            if e.code < 500 or attempt == 2:
+                return f'http {e.code}', None, None
+        except Exception as e:
+            if attempt == 2:
+                return f'failed ({e})', None, None
+        time.sleep(15 * (attempt + 1))
+
+
+def title(body):
+    m = re.search(rb'<title>(.*?)</title>', body or b'', re.S)
+    return html.unescape(m.group(1).decode('utf-8', 'replace')).strip() if m else ''
+
+
+def saved(out, n):
+    return any(os.path.isdir(os.path.join(out, 'eng', tab, 'download', str(n))) for tab in TABS)
+
+
+def check_number(out, n):
+    """Read number n's page in each tab; save what it links. Returns a line saying what happened."""
+    seen = []
+    for tab in TABS:
+        state, h, body = answer(f'{SITE}/eng/{tab}/view/{n}')
+        links = download_links(tab, body) if state == 'ok' else []
+        if links:
+            got = [(u, get(u)) for u in links]
+            for u, g in got:
+                if g:
+                    save(out, u, *g)
+            if all(g for _, g in got):
+                return f'number {n}: {tab}, {title(body)}'
+            return f'FAILED number {n}: {tab}, a download did not come down'
+        seen.append(f'{tab} {state}' + (f' "{title(body)[:90]}"' if state == 'ok' else ''))
+    return f'number {n}: nothing to save ({"; ".join(seen)})'
+
+
+def sweep(out, last, stop_at, workers=4):
+    todo = [n for n in range(1, last + 1) if not saved(out, n)]
+    print(f'checking {len(todo)} numbers from 1 to {last} that have no saved folder', flush=True)
+    found = failed = 0
+    with concurrent.futures.ThreadPoolExecutor(workers) as pool:
+        futures = {}
+        it = iter(todo)
+        def submit():
+            for n in it:
+                if time.time() > stop_at:
+                    return False
+                futures[pool.submit(check_number, out, n)] = n
+                return True
+            return False
+        for _ in range(workers * 2):
+            submit()
+        while futures:
+            done, _ = concurrent.futures.wait(futures, return_when=concurrent.futures.FIRST_COMPLETED)
+            for f in done:
+                futures.pop(f)
+                line = f.result()
+                print(line, flush=True)
+                if line.startswith('FAILED') or ' http 5' in line or 'failed (' in line:
+                    failed += 1
+                elif 'nothing to save' not in line:
+                    found += 1
+                submit()
+    left = sum(1 for n in todo if not saved(out, n))
+    print(f'number check: {found} contests found and saved, {failed} numbers the site did not answer', flush=True)
+    if time.time() > stop_at:
+        print('STOPPED at the time limit before checking every number. Run again to continue.', flush=True)
+        return failed + 1
+    return failed
 
 
 def list_contests(tab):
@@ -129,11 +219,18 @@ def list_contests(tab):
 
 
 def main(out, minutes):
+    state, _, _ = answer(f'{SITE}/eng/contests/view/2')
+    if state != 'ok':
+        print(f'The site did not serve a known contest page ({SITE}/eng/contests/view/2: {state}). '
+              f'Nothing downloaded; run again when the site is back.', flush=True)
+        return 1
     stop_at = time.time() + minutes * 60
     failed = 0
+    highest = 0
     for tab in TABS:
         numbers, f = list_contests(tab)
         failed += f
+        highest = max([highest, *numbers])
         todo = [n for n in sorted(numbers)
                 if not os.path.isdir(os.path.join(out, 'eng', tab, 'download', str(n)))]
         print(f'{tab}: {len(numbers)} contests listed, {len(numbers) - len(todo)} already saved, '
@@ -158,6 +255,7 @@ def main(out, minutes):
                     save(out, url, *got)
                 else:
                     failed += 1
+    failed += sweep(out, highest, stop_at)
     print(f'Done, {failed} failed.')
     return 1 if failed else 0
 
