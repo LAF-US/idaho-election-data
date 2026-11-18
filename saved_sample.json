@@ -1,0 +1,278 @@
+[
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/search/year_from:2024/year_to:2024/show_granularity_dt_id:7/.csv",
+"sha256": "eebeb5db7462770c31ca0739dc20140afc78c4fc7951d31708d658284d3091bc",
+"saved": "2026-11-17",
+"name": "canvass_sos_idaho_gov_eng_contests_search_year_from_2024_year_to_2024_show_granu"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/search/year_from:2024/year_to:2024/show_granularity_dt_id:3/.csv",
+"sha256": "dff1ae6f27227d80596154a10189df5c4ae20efa5322af0add34bee24936f20a",
+"saved": "2026-11-17",
+"name": "canvass_sos_idaho_gov_eng_contests_search_year_from_2024_year_to_2024_show_granu"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/19439/show_granularity_dt_id:7/.csv",
+"sha256": "23772ef3244f29878a7e76d03445fe54efc06041680bafa250647caf5b2c1494",
+"saved": "2026-11-14",
+"name": "State_of_Idaho_Elections_Database__2024_Nov_5_General_Election_President_State_o"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/19439/show_granularity_dt_id:3/.csv",
+"sha256": "9f1e97459c11375c77fc3580ff472040dcc48fcb6b69d65354b9678e91d8eeda",
+"saved": "2026-11-14",
+"name": "State_of_Idaho_Elections_Database__2024_Nov_5_General_Election_President_State_o"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/20485/show_granularity_dt_id:7/.csv",
+"sha256": "8270be670157dc401aecc7403c869879eb8814cb0cf2fd0632beff2ade204620",
+"saved": "2026-11-14",
+"name": "State_of_Idaho_Elections_Database__2024_May_21_Republican_Primary_State_Represen"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/20485/show_granularity_dt_id:3/.csv",
+"sha256": "68eed7fb98e4ea0b4f99418deffc9be66604d3029a3be7a0b561bbdc8fbe41c2",
+"saved": "2026-11-14",
+"name": "State_of_Idaho_Elections_Database__2024_May_21_Republican_Primary_State_Represen"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/13145/show_granularity_dt_id:3/.csv",
+"sha256": "c8ffac009cc76593bcf53ccaf4a62f49b8cd717fc42dca4093871e668cd28f76",
+"saved": "2026-11-18",
+"name": "State_of_Idaho_Elections_Database__2016_May_17_Republican_Primary_Precinct_Commi"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/1228/show_granularity_dt_id:3/.csv",
+"sha256": "89e596f46c1ea4813e5389bf22176138bdcf3472a5c674f5fc2bb6365214aacc",
+"saved": "2026-11-14",
+"name": "State_of_Idaho_Elections_Database__1996_Nov_4_General_Election_State_Representat"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/766/show_granularity_dt_id:7/.csv",
+"sha256": "debb8c94165dea1dff350e5e7b950627c1a7bf9715c5445adf03bb60e0b086b3",
+"saved": "2026-11-18",
+"name": "State_of_Idaho_Elections_Database__1992_Nov_3_General_Election_State_Representat"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/19813/show_granularity_dt_id:3/.csv",
+"sha256": "64304035d3b2bccbab02b02946bdf46495f3de7d66c6cd6082950a227f024b1e",
+"saved": "2026-11-14",
+"name": "State_of_Idaho_Elections_Database__2024_Nov_5_General_Election_County_Commission"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/16079/show_granularity_dt_id:7/.csv",
+"sha256": "145fc55aae6f74dd9539a3c081436f54132711af2cbd86caa1eda46f70815955",
+"saved": "2026-11-18",
+"name": "State_of_Idaho_Elections_Database__2022_May_17_Democratic_Primary_Precinct_Commi"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/14004/show_granularity_dt_id:3/.csv",
+"sha256": "f545b3befe9c9c9f2898e03a56260aba6c74fab504b34003faa56d0625a7b695",
+"saved": "2026-11-18",
+"name": "State_of_Idaho_Elections_Database__2018_May_15_Republican_Primary_Precinct_Commi"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/13391/show_granularity_dt_id:7/.csv",
+"sha256": "89144bf625bb783e5d6306cfe443f8307af428a284c330f2a6b4eb5c4aa50b31",
+"saved": "2026-11-18",
+"name": "State_of_Idaho_Elections_Database__2018_May_15_Republican_Primary_Precinct_Commi"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/2339/show_granularity_dt_id:3/.csv",
+"sha256": "8e91aa21d99ce8abb8a7a897eb730f6ee486ed4ef6ab791eedccb9d9e4d8bfb0",
+"saved": "2026-11-14",
+"name": "State_of_Idaho_Elections_Database__2004_May_25_Republican_Primary_State_Represen"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/6923/show_granularity_dt_id:7/.csv",
+"sha256": "ca1d5f0276218945ab311fb762e3eb9cbbafe1b778e307e6402ac7610d1e8306",
+"saved": "2026-11-14",
+"name": "State_of_Idaho_Elections_Database__2014_May_20_Republican_Primary_State_Represen"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/2405/show_granularity_dt_id:7/.csv",
+"sha256": "833f365c8a6c587da6a856040b80f55c8105d96125048e6efe53ed686f862d68",
+"saved": "2026-11-14",
+"name": "State_of_Idaho_Elections_Database__2004_May_25_Republican_Primary_State_Senate_D"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/13170/show_granularity_dt_id:3/.csv",
+"sha256": "82f952b3d1de20d79088931e5dd49a85d77e270aec3d769648783eab3a1c425a",
+"saved": "2026-11-18",
+"name": "State_of_Idaho_Elections_Database__2018_May_15_Republican_Primary_Precinct_Commi"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/2192/show_granularity_dt_id:7/.csv",
+"sha256": "2a14a413713d6cd8ef3768cc31749c528f3fc86d532ae028abb67e5d17a8fc90",
+"saved": "2026-11-14",
+"name": "State_of_Idaho_Elections_Database__2004_Nov_2_General_Election_State_Representat"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/15475/show_granularity_dt_id:3/.csv",
+"sha256": "cd4f67e4fbf70674f7eb92872437860715a1c1ce0cabbdfc32de5d88d48b316d",
+"saved": "2026-11-18",
+"name": "State_of_Idaho_Elections_Database__2022_May_17_Republican_Primary_Precinct_Commi"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/20333/show_granularity_dt_id:7/.csv",
+"sha256": "10c871525e80f439f73d3e9cb9d7b5ba1e3957a258a19e50ad8902b3e1e8f49c",
+"saved": "2026-11-14",
+"name": "State_of_Idaho_Elections_Database__2024_May_21_Republican_Primary_State_Represen"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/14511/show_granularity_dt_id:7/.csv",
+"sha256": "289160a93edc3f1cfc6ae0e921a738a62797f6d26087e1f124108e7f7597742f",
+"saved": "2026-11-18",
+"name": "State_of_Idaho_Elections_Database__2018_May_15_Democratic_Primary_County_Coroner"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/13364/show_granularity_dt_id:7/.csv",
+"sha256": "29eaa6c806d6ef353df1638b2150dc874e543aa63eaadd4877c08a2038245f92",
+"saved": "2026-11-18",
+"name": "State_of_Idaho_Elections_Database__2018_May_15_Republican_Primary_Precinct_Commi"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/14249/show_granularity_dt_id:3/.csv",
+"sha256": "6d3cf456e2eecd934c42bff6e730827cbe6f252423392ff29fda50897ff880b1",
+"saved": "2026-11-14",
+"name": "State_of_Idaho_Elections_Database__2020_May_19_Democratic_Primary_State_Represen"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/817/show_granularity_dt_id:3/.csv",
+"sha256": "1dded9849753479bf2404c0e7190ddd9d06fa185f0d1bf1b5010eb50c08a9740",
+"saved": "2026-11-18",
+"name": "State_of_Idaho_Elections_Database__1992_May_26_Democratic_Primary_State_Represen"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/12208/show_granularity_dt_id:3/.csv",
+"sha256": "14a5d73bda3629d69a30f999ab0cbf02ee6858908621f5ffdc37269c0fcca3c8",
+"saved": "2026-11-18",
+"name": "State_of_Idaho_Elections_Database__2016_May_17_Republican_Primary_Precinct_Commi"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/15919/show_granularity_dt_id:7/.csv",
+"sha256": "d9e8188f0fb30275c0deba58e096e3e1406bb7139361cf528cd17e99b0dc8b18",
+"saved": "2026-11-18",
+"name": "State_of_Idaho_Elections_Database__2022_May_17_Republican_Primary_Precinct_Commi"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/2850/show_granularity_dt_id:7/.csv",
+"sha256": "ba91455dad18360c7de36365930605838187c7ccf8721c8a20b4b4cb40591408",
+"saved": "2026-11-18",
+"name": "State_of_Idaho_Elections_Database__2008_May_27_Democratic_Primary_State_Represen"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/7916/show_granularity_dt_id:3/.csv",
+"sha256": "2c780385ea5a9f51bc74af337547fddf9517fd71583c18934f12f56e21fe9185",
+"saved": "2026-11-18",
+"name": "State_of_Idaho_Elections_Database__2002_May_28_Primary_Election_District_Judge_T"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/13042/show_granularity_dt_id:7/.csv",
+"sha256": "87deec41ec0936d15935bc3eee8515cf44b5130553889dcb6436cc2313830ed7",
+"saved": "2026-11-18",
+"name": "State_of_Idaho_Elections_Database__2016_May_17_Republican_Primary_Precinct_Commi"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/13931/show_granularity_dt_id:7/.csv",
+"sha256": "259e2815f38602738c0b328446c0d19d325284584fac6c8e84616c72418a6d5f",
+"saved": "2026-11-18",
+"name": "State_of_Idaho_Elections_Database__2018_May_15_Republican_Primary_Precinct_Commi"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/12965/show_granularity_dt_id:3/.csv",
+"sha256": "b4ca29d908bc4c1d921cd6e7f58455c1864519ba635a91b10b05d99f84f31e0f",
+"saved": "2026-11-18",
+"name": "State_of_Idaho_Elections_Database__2016_May_17_Republican_Primary_Precinct_Commi"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/13974/show_granularity_dt_id:7/.csv",
+"sha256": "b0928eb1c21b4da886befbd0c17434aedf70483ed689c5a1331fbe1258f0c5e0",
+"saved": "2026-11-18",
+"name": "State_of_Idaho_Elections_Database__2018_May_15_Democratic_Primary_Precinct_Commi"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/13424/show_granularity_dt_id:7/.csv",
+"sha256": "28b9262255af7ac31ee90e1d63f6058cc1f473ea04ba936178c3b5196ae9778d",
+"saved": "2026-11-14",
+"name": "State_of_Idaho_Elections_Database__2018_May_15_Republican_Primary_Precinct_Commi"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/16589/show_granularity_dt_id:3/.csv",
+"sha256": "c47bc1d4a20496a3d03de36cc2a3c486d5581d3f472ef73a81d67cd745f68bc5",
+"saved": "2026-11-18",
+"name": "State_of_Idaho_Elections_Database__2022_May_17_Republican_Primary_Precinct_Commi"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/5758/show_granularity_dt_id:3/.csv",
+"sha256": "bbfa3a4e58063bead9c26360803d71e3a508913c3e9c835dcb0d80f47d62d81a",
+"saved": "2026-11-14",
+"name": "State_of_Idaho_Elections_Database__2020_Nov_3_General_Election_State_Representat"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/263/show_granularity_dt_id:3/.csv",
+"sha256": "d1226e9f87d558ab0eab6c0c0374de96c76f989c5837925817249241a9c825d8",
+"saved": "2026-11-14",
+"name": "State_of_Idaho_Elections_Database__2006_May_23_Democratic_Primary_Attorney_Gener"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/13449/show_granularity_dt_id:7/.csv",
+"sha256": "1bab3c20b96e166e326e2881d4ced8b97c4e2a9aea1cea57dcea3336458a324c",
+"saved": "2026-11-18",
+"name": "State_of_Idaho_Elections_Database__2018_May_15_Democratic_Primary_Precinct_Commi"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/7958/show_granularity_dt_id:7/.csv",
+"sha256": "23425eadfcce55e63b675354bfd94a93f7f132f5609cf80d5188a37f7cb9cef9",
+"saved": "2026-11-14",
+"name": "State_of_Idaho_Elections_Database__2018_May_15_Special_Republican_Primary_County"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/240/show_granularity_dt_id:7/.csv",
+"sha256": "ddf1f9a194c15b9b2994ccfe523b405e62fa2330a9589f88ed82deca6d273371",
+"saved": "2026-11-18",
+"name": "State_of_Idaho_Elections_Database__2006_Nov_7_General_Election_State_Treasurer_S"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/1366/show_granularity_dt_id:3/.csv",
+"sha256": "742514b51d3916163b311aadecf03b910c33d050a00bb9ff65f62feef31f3231",
+"saved": "2026-11-18",
+"name": "State_of_Idaho_Elections_Database__1996_May_28_Republican_Primary_State_Senate_D"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/8578/show_granularity_dt_id:7/.csv",
+"sha256": "d01769964b31a8bf0794c932d5466f31ab9be194b271aa76fb633ed8bed25b54",
+"saved": "2026-11-18",
+"name": "State_of_Idaho_Elections_Database__2018_Nov_6_General_Election_County_Assessor_B"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/15526/show_granularity_dt_id:7/.csv",
+"sha256": "a45fea4f8c235548f11fc3b9dfe046628e49c2d73b6482a0f695c7d31ab44245",
+"saved": "2026-11-18",
+"name": "State_of_Idaho_Elections_Database__2022_May_17_Republican_Primary_Precinct_Commi"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/14524/show_granularity_dt_id:7/.csv",
+"sha256": "ac333e35f57c0012b46960edf45ad32e08163851db130d18300c795054d322e0",
+"saved": "2026-11-18",
+"name": "State_of_Idaho_Elections_Database__2018_May_15_Republican_Primary_County_Treasur"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/ballot_questions/download/17017/show_granularity_dt_id:7/.csv",
+"sha256": "022680641e26c771ce7134080d45b3453f167257466c4aee5758c4a2bb5e7297",
+"saved": "2026-11-14",
+"name": "State_of_Idaho_Elections_Database__2022_May_17_Special_Wendell_School_District_L"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/16218/show_granularity_dt_id:3/.csv",
+"sha256": "ee6cf86144b6add48ddad69e6725884704eae732228a6f943d1b472007afd18e",
+"saved": "2026-11-18",
+"name": "State_of_Idaho_Elections_Database__2022_May_17_Republican_Primary_Precinct_Commi"
+},
+{
+"url": "https://canvass.sos.idaho.gov/eng/contests/download/17319/show_granularity_dt_id:7/.csv",
+"sha256": "c61e806b5a4c2efd0b8ce41497f34e67fac27d6098bae7064fd739d484abfba0",
+"saved": "2026-11-14",
+"name": "State_of_Idaho_Elections_Database__2022_Nov_8_General_Election_State_Representat"
+}
+]
