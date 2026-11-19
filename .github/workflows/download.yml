@@ -25,12 +25,14 @@ jobs:
           git checkout -q -B "$GITHUB_REF_NAME" FETCH_HEAD
       - name: Download the search exports
         run: python3 -I download.py canvass.sos.idaho.gov || echo "Some downloads failed; saving the rest."
+      - name: Rebuild the database and its check
+        run: python3 -I build_db.py canvass.sos.idaho.gov results.sqlite > CHECK.txt
       - name: Save the files to the repo
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
           [ -d canvass.sos.idaho.gov ] || { echo "Nothing downloaded."; exit 0; }
-          git add canvass.sos.idaho.gov
+          git add canvass.sos.idaho.gov results.sqlite CHECK.txt
           git diff --cached --quiet && { echo "Nothing new downloaded."; exit 0; }
           git commit -q -m "Canvass site search exports as downloaded"
           git push origin "HEAD:$GITHUB_REF_NAME"
