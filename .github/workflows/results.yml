@@ -4,7 +4,7 @@ on:
     branches: [results]
   workflow_dispatch:
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '7 * * * *'   # every hour; download_results.py --scheduled decides what is due
 permissions:
   contents: write
 concurrency:
@@ -26,13 +26,16 @@ jobs:
           git fetch -q --depth=1 origin "$GITHUB_REF_NAME"
           git checkout -q -B "$GITHUB_REF_NAME" FETCH_HEAD
       - name: Download the results site's files
-        run: python3 -I download_results.py . || echo "Some downloads failed; saving the rest."
+        run: |
+          FLAG=""; [ "$GITHUB_EVENT_NAME" = schedule ] && FLAG=--scheduled
+          python3 -I download_results.py . $FLAG || echo "Some downloads failed; saving the rest."
       - name: Save the files to the repo
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
           [ -d results.voteidaho.gov ] || { echo "Nothing downloaded."; exit 0; }
           git add results.voteidaho.gov
+          [ -f results_monthly.txt ] && git add results_monthly.txt
           git diff --cached --quiet && { echo "Nothing new from the results site."; exit 0; }
           git commit -q -m "Results site files as served"
           git push origin "HEAD:$GITHUB_REF_NAME"

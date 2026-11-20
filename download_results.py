@@ -23,9 +23,22 @@ Each file is downloaded on its own and written under a temporary name, then rena
 so a download that stops partway never replaces a saved file. A file that fails doesn't stop the
 others; the next run tries it again.
 
-  python3 download_results.py OUTDIR
+With --scheduled, it pulls only what your schedule calls for at this hour (the workflow runs it every
+hour), from the date alone:
+  - Election days come from Idaho Code 34-106(1): the third Tuesday in May and the Tuesday following
+    the first Monday in November, every year.
+  - From poll close on election day (9 PM Mountain, America/Boise time) for 72 hours: that election,
+    every hour.
+  - After that: that election once a day (the 15:00 UTC run), until its saved status says
+    isOfficialResults, or 45 days after poll close, whichever comes first.
+  - Every month, from the 15:00 UTC run on the 1st: every election the site lists. The run that pulls
+    all of it without a failure writes the month to OUTDIR/results_monthly.txt; until one does, each
+    hourly run tries again, so a late or dropped run on the 1st doesn't skip the month.
+Without --scheduled, it pulls every election the site lists.
+
+  python3 download_results.py OUTDIR [--scheduled]
 """
-import hashlib, json, os, sys, time, urllib.error, urllib.parse, urllib.request
+import calendar, datetime as dt, hashlib, json, os, sys, time, urllib.error, urllib.parse, urllib.request, zoneinfo
 
 SITE = 'https://results.voteidaho.gov'
 ELECTIONS = SITE + '/results/public/api/jurisdictions/id'
@@ -98,7 +111,61 @@ def reports(status):
                     yield f'{SITE}/cdn/results/{folder}/{urllib.parse.quote(f["blobName"])}'
 
 
-def main(out):
+HOURLY_DAYS, DAILY_HOUR, MAX_DAYS = 3, 15, 45
+BOISE, POLLS_CLOSE = zoneinfo.ZoneInfo('America/Boise'), 21   # 9 PM Mountain
+MONTHLY = 'results_monthly.txt'
+MON = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
+
+
+def election_days(year):
+    """Idaho Code 34-106(1): the third Tuesday in May; the Tuesday following the first Monday in November."""
+    def nth(month, weekday, n):
+        first = dt.date(year, month, 1)
+        return first + dt.timedelta(days=(weekday - first.weekday()) % 7 + 7 * (n - 1))
+    return [nth(5, calendar.TUESDAY, 3), nth(11, calendar.MONDAY, 1) + dt.timedelta(days=1)]
+
+
+def is_official(out, election):
+    path = path_for(out, STATUS.format(election=election))
+    try:
+        return bool(json.load(open(path)).get('isOfficialResults'))
+    except (OSError, ValueError):
+        return False
+
+
+def monthly_due(out, now):
+    if now.day == 1 and now.hour < DAILY_HOUR:
+        return False
+    try:
+        done = open(os.path.join(out, MONTHLY)).read().strip()
+    except OSError:
+        done = ''
+    return done != f'{now:%Y-%m}'
+
+
+def window(out, now):
+    """The elections in an election-day window at this hour: hourly for 72 hours from poll close, then
+    the 15:00 UTC run each day until the saved status says official, or 45 days after poll close."""
+    found = []
+    for day in election_days(now.year - 1) + election_days(now.year):
+        election = f'{MON[day.month - 1]}{day.year}'
+        start = dt.datetime(day.year, day.month, day.day, POLLS_CLOSE, tzinfo=BOISE).astimezone(dt.timezone.utc)
+        age = now - start
+        if dt.timedelta(0) <= age < dt.timedelta(days=HOURLY_DAYS):
+            found.append(election)
+        elif dt.timedelta(days=HOURLY_DAYS) <= age < dt.timedelta(days=MAX_DAYS) and now.hour == DAILY_HOUR \
+                and not is_official(out, election):
+            found.append(election)
+    return found
+
+
+def main(out, scheduled=False, now=None):
+    now = now or dt.datetime.now(dt.timezone.utc)
+    monthly = scheduled and monthly_due(out, now)
+    wanted = window(out, now) if scheduled else []
+    if scheduled and not monthly and not wanted:
+        print(f'Nothing due at {now:%Y-%m-%d %H:%M} UTC.', flush=True)
+        return 0
     failed = 0
     site = get_json(out, ELECTIONS)
     if site is None:
@@ -106,6 +173,12 @@ def main(out):
         return 1
     elections = [e['publicElectionId'] for e in site.get('elections') or [] if e.get('publicElectionId')]
     print(f'{len(elections)} elections listed: {", ".join(elections)}', flush=True)
+    if scheduled and not monthly:
+        missing = [e for e in wanted if e not in elections]
+        if missing:
+            print(f'In its election window but not listed by the site: {", ".join(missing)}', flush=True)
+        elections = [e for e in elections if e in wanted]
+        print(f'Due this hour: {", ".join(elections) or "none the site lists"}', flush=True)
     for election in elections:
         status = get_json(out, STATUS.format(election=election))
         if status is None:
@@ -123,11 +196,16 @@ def main(out):
                 failed += 1
             else:
                 save(out, url, body)
+    if monthly and not failed:
+        with open(os.path.join(out, MONTHLY), 'w') as f:
+            f.write(f'{now:%Y-%m}\n')
+        print(f'Monthly pull for {now:%Y-%m} done.', flush=True)
     print(f'Done, {failed} failed.', flush=True)
     return 1 if failed else 0
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 2:
+    args = [a for a in sys.argv[1:] if a != '--scheduled']
+    if len(args) != 1:
         sys.exit(__doc__)
-    sys.exit(main(sys.argv[1]))
+    sys.exit(main(args[0], scheduled='--scheduled' in sys.argv[1:]))

@@ -14,3 +14,14 @@ Idaho Secretary of State election results, saved as the state's sites serve them
 The status and export files keep their addresses and are replaced whenever the site serves something different, so this branch's history holds every version the site served. Report files get a new name for each version, so each is saved once.
 
 `download_results.py` downloads the files. Each file is downloaded on its own under a temporary name and renamed once complete, so a download that stops partway never replaces a saved file, and one that fails doesn't stop the rest; the next run tries it again. The GitHub Actions workflow runs it and commits whatever changed.
+
+## Schedule
+
+The workflow wakes every hour and runs `download_results.py --scheduled`, which pulls only what is due, from the date alone:
+
+- **Election nights:** election days come from Idaho Code 34-106(1), the third Tuesday in May and the Tuesday following the first Monday in November. From poll close (9 PM Mountain, America/Boise time) that election is pulled every hour for 72 hours.
+- **Until official:** after that, once a day (the 15:00 UTC run), until its saved status says `isOfficialResults`, or 45 days after poll close.
+- **Monthly:** from 15:00 UTC on the 1st, every election the site lists. The run that finishes it without a failure writes the month to `results_monthly.txt`; until one does, each hourly run tries again.
+- **By hand:** Actions > Download election-night results > Run workflow pulls every election the site lists.
+
+GitHub runs scheduled workflows only from the default branch, so the schedule starts once this is on `main`.
