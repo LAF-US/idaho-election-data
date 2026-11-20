@@ -17,9 +17,9 @@ The status and export files keep their addresses and are replaced whenever the s
 
 ## Schedule
 
-The workflow wakes every hour and runs `download_results.py --scheduled`, which pulls only what is due, from the date alone:
+The workflow wakes every hour and runs `download_results.py --scheduled`, and every 5 minutes and runs `download_results.py --every-5-minutes`. Each pulls only what is due, from the date alone:
 
-- **Election nights:** election days come from Idaho Code 34-106(1), the third Tuesday in May and the Tuesday following the first Monday in November. From poll close (9 PM Mountain, America/Boise time) that election is pulled every hour for 72 hours.
+- **Election nights:** election days come from Idaho Code 34-106(1), the third Tuesday in May and the Tuesday following the first Monday in November. From poll close (9 PM Mountain, America/Boise time) that election is pulled every 5 minutes for the first 24 hours, then every hour until 72 hours after poll close.
 - **Until official:** after that, once a day (the 15:00 UTC run), until its saved status says `isOfficialResults`, or 45 days after poll close.
 - **Monthly:** from 15:00 UTC on the 1st, every election the site lists. The run that finishes it without a failure writes the month to `results_monthly.txt`; until one does, each hourly run tries again.
 - **By hand:** Actions > Download election-night results > Run workflow pulls every election the site lists.

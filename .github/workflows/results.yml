@@ -4,7 +4,8 @@ on:
     branches: [results]
   workflow_dispatch:
   schedule:
-    - cron: '7 * * * *'   # every hour; download_results.py --scheduled decides what is due
+    - cron: '7 * * * *'     # every hour; download_results.py --scheduled decides what is due
+    - cron: '*/5 * * * *'   # every 5 minutes; pulls only an election in its first 24 hours after poll close
 permissions:
   contents: write
 concurrency:
@@ -26,8 +27,12 @@ jobs:
           git fetch -q --depth=1 origin "$GITHUB_REF_NAME"
           git checkout -q -B "$GITHUB_REF_NAME" FETCH_HEAD
       - name: Download the results site's files
+        env:
+          SCHEDULE: ${{ github.event.schedule }}
         run: |
-          FLAG=""; [ "$GITHUB_EVENT_NAME" = schedule ] && FLAG=--scheduled
+          FLAG=""
+          [ "$GITHUB_EVENT_NAME" = schedule ] && FLAG=--scheduled
+          [ "$SCHEDULE" = "*/5 * * * *" ] && FLAG=--every-5-minutes
           python3 -I download_results.py . $FLAG || echo "Some downloads failed; saving the rest."
       - name: Save the files to the repo
         run: |

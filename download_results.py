@@ -28,7 +28,8 @@ hour), from the date alone:
   - Election days come from Idaho Code 34-106(1): the third Tuesday in May and the Tuesday following
     the first Monday in November, every year.
   - From poll close on election day (9 PM Mountain, America/Boise time) for 72 hours: that election,
-    every hour.
+    every hour. For the first 24 hours, --every-5-minutes (the workflow runs it every 5 minutes) also
+    pulls it, and pulls nothing at any other time.
   - After that: that election once a day (the 15:00 UTC run), until its saved status says
     isOfficialResults, or 45 days after poll close, whichever comes first.
   - Every month, from the 15:00 UTC run on the 1st: every election the site lists. The run that pulls
@@ -36,7 +37,7 @@ hour), from the date alone:
     hourly run tries again, so a late or dropped run on the 1st doesn't skip the month.
 Without --scheduled, it pulls every election the site lists.
 
-  python3 download_results.py OUTDIR [--scheduled]
+  python3 download_results.py OUTDIR [--scheduled | --every-5-minutes]
 """
 import calendar, datetime as dt, hashlib, json, os, sys, time, urllib.error, urllib.parse, urllib.request, zoneinfo
 
@@ -111,7 +112,7 @@ def reports(status):
                     yield f'{SITE}/cdn/results/{folder}/{urllib.parse.quote(f["blobName"])}'
 
 
-HOURLY_DAYS, DAILY_HOUR, MAX_DAYS = 3, 15, 45
+HOURLY_DAYS, DAILY_HOUR, MAX_DAYS, FIVE_MINUTE_HOURS = 3, 15, 45, 24
 BOISE, POLLS_CLOSE = zoneinfo.ZoneInfo('America/Boise'), 21   # 9 PM Mountain
 MONTHLY = 'results_monthly.txt'
 MON = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
@@ -159,10 +160,22 @@ def window(out, now):
     return found
 
 
-def main(out, scheduled=False, now=None):
+def first_day(now):
+    """The elections within 24 hours of poll close, which the 5-minute run pulls."""
+    found = []
+    for day in election_days(now.year - 1) + election_days(now.year):
+        start = dt.datetime(day.year, day.month, day.day, POLLS_CLOSE, tzinfo=BOISE).astimezone(dt.timezone.utc)
+        if dt.timedelta(0) <= now - start < dt.timedelta(hours=FIVE_MINUTE_HOURS):
+            found.append(f'{MON[day.month - 1]}{day.year}')
+    return found
+
+
+def main(out, scheduled=False, now=None, every_5=False):
     now = now or dt.datetime.now(dt.timezone.utc)
-    monthly = scheduled and monthly_due(out, now)
-    wanted = window(out, now) if scheduled else []
+    if every_5:
+        scheduled = True
+    monthly = scheduled and not every_5 and monthly_due(out, now)
+    wanted = (first_day(now) if every_5 else window(out, now)) if scheduled else []
     if scheduled and not monthly and not wanted:
         print(f'Nothing due at {now:%Y-%m-%d %H:%M} UTC.', flush=True)
         return 0
@@ -205,7 +218,8 @@ def main(out, scheduled=False, now=None):
 
 
 if __name__ == '__main__':
-    args = [a for a in sys.argv[1:] if a != '--scheduled']
-    if len(args) != 1:
+    flags = {'--scheduled', '--every-5-minutes'}
+    args = [a for a in sys.argv[1:] if a not in flags]
+    if len(args) != 1 or len(flags & set(sys.argv[1:])) > 1:
         sys.exit(__doc__)
-    sys.exit(main(args[0], scheduled='--scheduled' in sys.argv[1:]))
+    sys.exit(main(args[0], scheduled='--scheduled' in sys.argv[1:], every_5='--every-5-minutes' in sys.argv[1:]))
