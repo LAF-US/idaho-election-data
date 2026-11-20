@@ -14,7 +14,9 @@ Then, for each contest number, it reads the contest's page and saves every downl
 Then it checks every number from 1 up to the highest number listed that has no saved folder in any
 tab, because the site's own count (12,556 contests on its home page) is higher than what its search
 pages list (12,530). For each such number it reads that number's page in each tab and saves any
-download the page links; it prints what the site answered for numbers with nothing to save.
+download the page links; it prints what the site answered for numbers with nothing to save, and
+adds each such number to numbers_with_nothing_to_save.txt in OUTDIR, so a later run doesn't check it
+again. A number the site didn't answer isn't added, and the next run checks it again.
 
 A contest whose download folder already exists in OUTDIR is skipped, so a later run picks up where
 an earlier one stopped, unless the folder still holds an empty file named .incomplete. That file is
@@ -176,6 +178,18 @@ def saved(out, n):
     return any(complete(out, tab, n) for tab in TABS)
 
 
+EMPTY = 'numbers_with_nothing_to_save.txt'
+
+
+def checked_empty(out):
+    """The numbers an earlier run checked in every tab and found nothing to save."""
+    try:
+        with open(os.path.join(out, EMPTY)) as f:
+            return {int(line) for line in f if line.strip()}
+    except FileNotFoundError:
+        return set()
+
+
 def check_number(out, n):
     """Read number n's page in each tab; save what it links. Returns a line saying what happened."""
     seen = []
@@ -191,8 +205,12 @@ def check_number(out, n):
 
 
 def sweep(out, last, stop_at, workers=4):
-    todo = [n for n in range(1, last + 1) if not saved(out, n)]
-    print(f'checking {len(todo)} numbers from 1 to {last} that have no saved folder', flush=True)
+    empty = checked_empty(out)
+    todo = [n for n in range(1, last + 1) if n not in empty and not saved(out, n)]
+    print(f'checking {len(todo)} numbers from 1 to {last} that have no saved folder '
+          f'({len(empty)} found empty earlier)', flush=True)
+    os.makedirs(out, exist_ok=True)
+    record = open(os.path.join(out, EMPTY), 'a')
     found = failed = 0
     with concurrent.futures.ThreadPoolExecutor(workers) as pool:
         futures = {}
@@ -209,15 +227,18 @@ def sweep(out, last, stop_at, workers=4):
         while futures:
             done, _ = concurrent.futures.wait(futures, return_when=concurrent.futures.FIRST_COMPLETED)
             for f in done:
-                futures.pop(f)
+                n = futures.pop(f)
                 line = f.result()
                 print(line, flush=True)
                 if line.startswith('FAILED') or ' http 5' in line or 'failed (' in line:
                     failed += 1
                 elif 'nothing to save' not in line:
                     found += 1
+                else:
+                    record.write(f'{n}\n')
+                    record.flush()
                 submit()
-    left = sum(1 for n in todo if not saved(out, n))
+    record.close()
     print(f'number check: {found} contests found and saved, {failed} numbers the site did not answer', flush=True)
     if time.time() > stop_at:
         print('STOPPED at the time limit before checking every number. Run again to continue.', flush=True)
