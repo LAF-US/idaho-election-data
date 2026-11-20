@@ -17,13 +17,14 @@ pages list (12,530). For each such number it reads that number's page in each ta
 download the page links; it prints what the site answered for numbers with nothing to save.
 
 A contest whose download folder already exists in OUTDIR is skipped, so a later run picks up where
-an earlier one stopped. The run stops starting new contests after MINUTES minutes.
+an earlier one stopped. When any of a contest's downloads fails, its folder is deleted, so the next run
+tries that contest again. The run stops starting new contests after MINUTES minutes.
 
 Each file goes in a folder that mirrors its address on the site, under the name the site gives it.
 
   python3 download.py OUTDIR [MINUTES]
 """
-import concurrent.futures, hashlib, html, os, re, sys, time, urllib.error, urllib.parse, urllib.request
+import concurrent.futures, hashlib, html, os, re, shutil, sys, time, urllib.error, urllib.parse, urllib.request
 
 SITE = 'https://canvass.sos.idaho.gov'
 TABS = ['contests', 'ballot_questions', 'voter_stats']
@@ -127,6 +128,14 @@ def title(body):
     return html.unescape(m.group(1).decode('utf-8', 'replace')).strip() if m else ''
 
 
+def unsave(out, tab, n):
+    """Delete a contest's download folder, so the next run tries the contest again."""
+    d = os.path.join(out, 'eng', tab, 'download', str(n))
+    if os.path.isdir(d):
+        shutil.rmtree(d)
+        print(f'deleted {d}, so the next run tries it again', flush=True)
+
+
 def saved(out, n):
     return any(os.path.isdir(os.path.join(out, 'eng', tab, 'download', str(n))) for tab in TABS)
 
@@ -144,6 +153,7 @@ def check_number(out, n):
                     save(out, u, *g)
             if all(g for _, g in got):
                 return f'number {n}: {tab}, {title(body)}'
+            unsave(out, tab, n)
             return f'FAILED number {n}: {tab}, a download did not come down'
         seen.append(f'{tab} {state}' + (f' "{title(body)[:90]}"' if state == 'ok' else ''))
     return f'number {n}: nothing to save ({"; ".join(seen)})'
@@ -249,12 +259,16 @@ def main(out, minutes):
             if not links:
                 print(f'NO DOWNLOAD LINK on {SITE}/eng/{tab}/view/{n}', flush=True)
                 failed += 1
+            missed = 0
             for url in links:
                 got = get(url)
                 if got:
                     save(out, url, *got)
                 else:
-                    failed += 1
+                    missed += 1
+            if missed:
+                failed += missed
+                unsave(out, tab, n)
     failed += sweep(out, highest, stop_at)
     print(f'Done, {failed} failed.')
     return 1 if failed else 0

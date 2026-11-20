@@ -23,7 +23,7 @@ jobs:
           git remote add origin "https://github.com/$GITHUB_REPOSITORY"
           git fetch -q --depth=1 origin "$GITHUB_REF_NAME"
           git checkout -q -B "$GITHUB_REF_NAME" FETCH_HEAD
-      - name: Download the search exports
+      - name: Download each contest's own file
         run: python3 -I download.py canvass.sos.idaho.gov || echo "Some downloads failed; saving the rest."
       - name: Rebuild the database and its check
         run: python3 -I build_db.py canvass.sos.idaho.gov results.sqlite > CHECK.txt
