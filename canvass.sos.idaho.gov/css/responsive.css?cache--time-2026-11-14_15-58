@@ -1,0 +1,323 @@
+/** 
+ * Media queries for responsive page layout
+ */
+
+
+@media screen and (max-width: 1200px) {
+	
+}
+
+@media screen and (min-width: 961px) and (max-width: 1110px) {
+	.search_results #search_results_table_info {
+		width: 250px;
+		white-space: normal;
+	}
+}
+
+@media screen and (max-width: 961px) {
+    body.controller_pages.action_index #page_wrapper,
+	#page_wrapper {
+		width: auto;
+		min-width: 250px;
+	}
+	#top_bar_wrapper {
+		min-width: 250px;	
+	}
+	.action_index #page_wrapper .one-fourth,
+	.action_index #page_wrapper .three-fourths,
+	.action_index #page_wrapper .search_results {
+		width: auto;
+		float: none;
+		clear: both;	
+		margin: 0 auto;
+		padding: 0 16px;
+		min-width: 250px;
+	}
+	
+	/* View details page */
+	.action_view #page_wrapper .one-fourth { width: 30%; min-width: 0px;   }
+	.action_view #page_wrapper .three-fourth { margin-left: 33%; min-width: 250px;   }
+	.action_view #page_wrapper .one-fourth .search_controls { display: none; }
+	.action_view #page_wrapper .one-fourth #add_this_wrapper { padding-left: 0px; margin-left: 0px; }
+	
+	.candidate_key .item { width: auto; }
+	.candidate_key .item .candidate {  }
+	.candidate_key .item .swatch { top: 0px; margin-right: 4px; margin-bottom: 2px; }
+	
+	
+		
+	
+	
+	.one-fourth > .inner > .search_wrapper,
+	.one-fourth > .inner > .chart_wrapper,
+	.one-fourth > .inner > .text_wrapper,
+	.one-fourth > .inner > .link_wrapper {
+		 
+		max-width: 350px;
+		margin-right: 16px;
+	}
+	.one-fourth > .inner > .search_wrapper {
+		max-width: 298px;
+	}
+	
+	
+	/* Search page */
+	
+	/* Search Results Table */
+	.dataTables_wrapper div.fg-toolbar.ui-toolbar,
+	#search_results_table {
+
+	}
+	
+	.search_results #search_results_table_info .text.start-to-end-of,
+	.search_results #search_results_table_filter .text.quick {
+		display: none;	
+	}
+	.search_results #search_results_table_info {
+		width: auto;
+		white-space: normal;
+	}
+	.search_results td table.candidates th.candidate, 
+	.search_results td table.candidates td.candidate,
+	.search_results td.bq_candidates table.candidates th.candidate, 
+	.search_results td.bq_candidates table.candidates td.candidate {
+		min-width: 0px;
+		width: auto;
+		white-space: normal;
+	}
+	.search_results td div.name,
+	tr.is_winner td div.name { white-space: normal; }
+	
+	tr.is_winner td img { display: none; }
+
+	
+	/* Home */
+	body.controller_pages.action_index #content_wrapper {
+		background: none;
+		background-size: 23%;
+		background-position: 80px 33%;	
+	}
+	body.controller_pages.action_index .row-top {
+		min-height: 0px;
+ 		padding: 0px 16px 40px 16px;
+	}
+	body.controller_pages.action_index .row-top > div {
+		top: 0px;
+		left: 0px;
+		width: auto;
+		 
+		margin: 0 auto;
+	}
+	body.controller_pages.action_index #home_headline_main {
+		background-size: 100%;
+	 
+		
+	}
+	body.controller_pages.action_index #home_subheadline_main br {
+		display: none;
+	}
+	
+	body.controller_pages.action_index #home_search_main {
+		width: auto;
+		margin: 0 auto;	
+	}
+	body.controller_pages.action_index #home_search_main > div.description {
+		height: auto;
+		min-height: 50px;	
+		float: none;
+		text-align: center;
+		width: auto;
+		max-width: 300px;
+		margin: 0 auto;
+		padding: 0;
+		background: none;
+	}
+	
+	body.controller_pages.action_index #home_search_main > div.description h1,
+	body.controller_pages.action_index #home_search_main > div.description p {
+		left: 0px;
+		text-align: center;
+	}
+	body.controller_pages.action_index #home_search_main > div.search_box {
+		float: none;
+		margin: 0 auto;
+  		max-width: 298px;
+	}
+}
+
+@media screen and (max-width: 748px) {
+	/* Sidebar items */
+	.one-fourth > .inner > .search_wrapper,
+	.one-fourth > .inner > .chart_wrapper,
+	.one-fourth > .inner > .text_wrapper,
+	.one-fourth > .inner > .link_wrapper {
+		float: none;	
+		clear: both;
+		max-width: 728px;
+		margin: 0 auto;
+	}
+	.one-fourth > .inner > .search_wrapper {
+		max-width: 298px;	
+	}
+	
+	 
+	/* Search page */
+	.non_candidate.n_total_votes td.candidate {
+		
+	}
+	.search_results td.candidates_container_cell.bq_candidates a {
+		white-space: normal;	
+	}
+	
+	/* Remove BQ Types column in the results table */
+	/* Be careful: you are targeting the column header by index number! */
+	body.controller_ballotquestions.action_index .search_results th:nth-child(4), 
+	body.controller_ballotquestions.action_index td.bq_types {
+		display: none;	
+	}
+	
+	/* View details page */
+	.candidate_key .item .candidate { line-height: 1em; }
+	.candidate_key .item .swatch {  margin-bottom: 2px; }
+	
+	
+	/* Election details table:
+	   horizontal scrollbar if too wide even for full-width page */
+	.precinct_results #precinct_data {
+		
+		/* disable for now, creating weird layout issues
+		display: block;
+    	overflow-x: auto;
+		*/
+	}
+}
+
+@media screen and (max-width: 690px) {
+	.search_results #search_results_table_info {
+		width: auto;
+		white-space: normal;
+		max-width: 180px;
+	}
+
+	.three-fourth > .inner {
+		overflow-x: auto;
+		overflow-y: hidden;
+	}
+
+	.action_view .three-fourth > .inner {
+		overflow: hidden;
+	}
+
+	.single-column.search_results > .inner {
+		overflow-x: auto;
+		overflow-y: hidden;
+	}
+
+}
+
+
+
+@media screen and (max-width: 624px) {
+	html, body {
+		min-width: 0px !important;	
+	}
+	div.one-third {
+		float: none;
+		width: auto;
+		max-width: 450px;
+		margin: 0 auto;	
+	}
+	
+	
+	
+	/* View details page */
+	.action_view .one-fourth, .action_view .three-fourth {
+		width: auto !important;
+		min-width: 250px !important;
+		margin: 16px !important;
+		float: none !important;
+		clear: both !important;
+	}
+	
+	/* Hide certain sidebar items for mobile view */
+	.action_view .one-fourth > div { margin: 0; }
+	.action_view .one-fourth .search_controls,
+	.action_view .one-fourth .candidate_key,
+	.action_view .one-fourth #stats,
+	.action_view .one-fourth #opponents { 
+		display: none; 
+	} 
+	
+	.action_view .one-fourth #add_this_wrapper { padding-left: 0px; margin-left: 0px; }
+	.action_view .link_wrapper_title, .action_view .link_wrapper { display: none; }
+
+	.action_view .link_wrapper_title.alternate_aggregations { display: block; }
+
+	.one-fourth #about_item {
+		display: none;
+	}
+	
+	/* Home */
+	body.controller_pages.action_index #content_wrapper {
+
+	}
+	body.controller_pages.action_index .row-top {
+ 		padding-bottom: 20px;
+	}
+	body.controller_pages.action_index #home_headline_main {
+
+	}
+	body.controller_pages.action_index #home_subheadline_main {
+		margin-bottom: 40px;	
+	}
+	body.controller_pages.action_index #home_subheadline_main table#elstats_logo_icon {
+		float: none;
+		margin: 0 auto;
+		margin-bottom: 1em;
+	}
+
+	body.controller_pages.action_index .row-bottom .one-third > .inner {
+		border: none;
+		border-bottom: 1px #6D6244 dotted;
+		padding: 0px 20px 20px;
+		min-height: 50px;	
+	}
+	body.controller_pages.action_index .row-bottom .one-third.first > .inner {
+		padding-top: 20px;	
+	}
+	
+	/* Search Results Table */
+	.search_results #search_results_table_info .text.showing {
+		display: none;	
+	}
+	.search_results #search_results_table_filter input {
+		width: 80px;	
+	}
+	
+	
+}
+
+@media screen and (max-width: 600px) {
+	#page_wrapper .search_results {
+		min-width: auto;
+	}
+
+	.for_table td.toolbar.left {
+		white-space: nowrap;
+	}
+}
+
+@media screen and (max-width: 480px) {
+	
+	/* HOME */
+	body.controller_pages.action_index #home_headline_main {
+
+	}
+	body.controller_pages.action_index #home_subheadline_main {
+		font-size: 16px;
+	}
+
+	#page_wrapper .search_results {
+		min-width: auto;
+	}
+}
