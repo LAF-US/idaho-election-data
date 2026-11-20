@@ -17,14 +17,18 @@ pages list (12,530). For each such number it reads that number's page in each ta
 download the page links; it prints what the site answered for numbers with nothing to save.
 
 A contest whose download folder already exists in OUTDIR is skipped, so a later run picks up where
-an earlier one stopped. When any of a contest's downloads fails, its folder is deleted, so the next run
-tries that contest again. The run stops starting new contests after MINUTES minutes.
+an earlier one stopped, unless the folder still holds an empty file named .incomplete. That file is
+made when a contest's downloads start and removed once every file the contest links is saved. A
+contest whose folder still holds it is tried again on the next run, which skips the files already
+saved and downloads only the missing ones. Each file is written under a temporary name and renamed
+once it is complete, so a download that stops partway is never taken for a saved file. The run stops
+starting new contests after MINUTES minutes.
 
 Each file goes in a folder that mirrors its address on the site, under the name the site gives it.
 
   python3 download.py OUTDIR [MINUTES]
 """
-import concurrent.futures, hashlib, html, os, re, shutil, sys, time, urllib.error, urllib.parse, urllib.request
+import concurrent.futures, hashlib, html, os, re, sys, time, urllib.error, urllib.parse, urllib.request
 
 SITE = 'https://canvass.sos.idaho.gov'
 TABS = ['contests', 'ballot_questions', 'voter_stats']
@@ -86,8 +90,10 @@ def save(out, url, headers, body):
     folder, name = filename(url, headers)
     d = os.path.join(out, folder)
     os.makedirs(d, exist_ok=True)
-    with open(os.path.join(d, name), 'wb') as f:
+    path = os.path.join(d, name)
+    with open(path + '.part', 'wb') as f:
         f.write(body)
+    os.replace(path + '.part', path)
     print(f'saved {os.path.join(folder, name)}: {len(body):,} bytes, '
           f'sha256 {hashlib.sha256(body).hexdigest()[:12]}', flush=True)
 
@@ -128,16 +134,46 @@ def title(body):
     return html.unescape(m.group(1).decode('utf-8', 'replace')).strip() if m else ''
 
 
-def unsave(out, tab, n):
-    """Delete a contest's download folder, so the next run tries the contest again."""
+INCOMPLETE = '.incomplete'
+
+
+def complete(out, tab, n):
+    """True when contest n's folder exists and every file it links was saved."""
     d = os.path.join(out, 'eng', tab, 'download', str(n))
-    if os.path.isdir(d):
-        shutil.rmtree(d)
-        print(f'deleted {d}, so the next run tries it again', flush=True)
+    return os.path.isdir(d) and not os.path.exists(os.path.join(d, INCOMPLETE))
+
+
+def have(out, url):
+    """True when the file this link downloads is already saved."""
+    p = os.path.join(out, urllib.parse.urlsplit(url).path.strip('/'))
+    if os.path.isdir(p):
+        return any(not f.endswith('.part') for f in os.listdir(p))
+    return os.path.isfile(p)
+
+
+def download_contest(out, tab, n, links):
+    """Save every file contest n links that isn't saved yet. Returns how many could not be downloaded."""
+    d = os.path.join(out, 'eng', tab, 'download', str(n))
+    os.makedirs(d, exist_ok=True)
+    mark = os.path.join(d, INCOMPLETE)
+    open(mark, 'w').close()
+    missed = 0
+    for url in links:
+        if have(out, url):
+            print(f'already saved {url}', flush=True)
+            continue
+        got = get(url)
+        if got:
+            save(out, url, *got)
+        else:
+            missed += 1
+    if not missed:
+        os.remove(mark)
+    return missed
 
 
 def saved(out, n):
-    return any(os.path.isdir(os.path.join(out, 'eng', tab, 'download', str(n))) for tab in TABS)
+    return any(complete(out, tab, n) for tab in TABS)
 
 
 def check_number(out, n):
@@ -147,13 +183,8 @@ def check_number(out, n):
         state, h, body = answer(f'{SITE}/eng/{tab}/view/{n}')
         links = download_links(tab, body) if state == 'ok' else []
         if links:
-            got = [(u, get(u)) for u in links]
-            for u, g in got:
-                if g:
-                    save(out, u, *g)
-            if all(g for _, g in got):
+            if not download_contest(out, tab, n, links):
                 return f'number {n}: {tab}, {title(body)}'
-            unsave(out, tab, n)
             return f'FAILED number {n}: {tab}, a download did not come down'
         seen.append(f'{tab} {state}' + (f' "{title(body)[:90]}"' if state == 'ok' else ''))
     return f'number {n}: nothing to save ({"; ".join(seen)})'
@@ -241,8 +272,7 @@ def main(out, minutes):
         numbers, f = list_contests(tab)
         failed += f
         highest = max([highest, *numbers])
-        todo = [n for n in sorted(numbers)
-                if not os.path.isdir(os.path.join(out, 'eng', tab, 'download', str(n)))]
+        todo = [n for n in sorted(numbers) if not complete(out, tab, n)]
         print(f'{tab}: {len(numbers)} contests listed, {len(numbers) - len(todo)} already saved, '
               f'{len(todo)} to download', flush=True)
         for i, n in enumerate(todo):
@@ -259,16 +289,8 @@ def main(out, minutes):
             if not links:
                 print(f'NO DOWNLOAD LINK on {SITE}/eng/{tab}/view/{n}', flush=True)
                 failed += 1
-            missed = 0
-            for url in links:
-                got = get(url)
-                if got:
-                    save(out, url, *got)
-                else:
-                    missed += 1
-            if missed:
-                failed += missed
-                unsave(out, tab, n)
+            if links:
+                failed += download_contest(out, tab, n, links)
     failed += sweep(out, highest, stop_at)
     print(f'Done, {failed} failed.')
     return 1 if failed else 0
