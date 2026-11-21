@@ -28,8 +28,9 @@ hour), from the date alone:
   - Election days come from Idaho Code 34-106(1): the third Tuesday in May and the Tuesday following
     the first Monday in November, every year.
   - From poll close on election day (9 PM Mountain, America/Boise time) for 72 hours: that election,
-    every hour. For the first 24 hours, --every-5-minutes (the workflow runs it every 5 minutes) also
-    pulls it, and pulls nothing at any other time.
+    every hour. For the first 24 hours, the hourly run keeps going and pulls it every 5 minutes with
+    --every-5-minutes, which pulls only an election within 24 hours of poll close; --in-first-day
+    exits 0 while one is, so the workflow knows whether to keep going.
   - After that: that election once a day (the 15:00 UTC run), until its saved status says
     isOfficialResults, or 45 days after poll close, whichever comes first.
   - Every month, from the 15:00 UTC run on the 1st: every election the site lists. The run that pulls
@@ -37,7 +38,7 @@ hour), from the date alone:
     hourly run tries again, so a late or dropped run on the 1st doesn't skip the month.
 Without --scheduled, it pulls every election the site lists.
 
-  python3 download_results.py OUTDIR [--scheduled | --every-5-minutes]
+  python3 download_results.py OUTDIR [--scheduled | --every-5-minutes | --in-first-day]
 """
 import calendar, datetime as dt, hashlib, json, os, sys, time, urllib.error, urllib.parse, urllib.request, zoneinfo
 
@@ -70,15 +71,22 @@ def fetch(url, tries=3):
 
 
 def path_for(out, url):
+    """The file under OUTDIR that mirrors url. A path that would leave OUTDIR/<host> is refused."""
     p = urllib.parse.urlsplit(url)
-    return os.path.join(out, p.netloc, urllib.parse.unquote(p.path).strip('/'))
+    base = os.path.realpath(os.path.join(out, p.netloc))
+    path = os.path.realpath(os.path.join(base, urllib.parse.unquote(p.path).strip('/')))
+    if not path.startswith(base + os.sep):
+        raise ValueError(f'{url} would be saved outside {base}')
+    return path
 
 
 def save(out, url, body):
     """Write body to the file that mirrors url, unless that file already holds exactly this. True if written."""
     path = path_for(out, url)
-    if os.path.isfile(path) and open(path, 'rb').read() == body:
-        return False
+    if os.path.isfile(path):
+        with open(path, 'rb') as f:
+            if f.read() == body:
+                return False
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path + '.part', 'wb') as f:
         f.write(body)
@@ -108,8 +116,13 @@ def reports(status):
     for cat in status.get('publicReportCategories') or []:
         for rep in cat.get('reports') or []:
             for f in [rep] + (rep.get('versions') or []):
-                if folder and f.get('blobName'):
-                    yield f'{SITE}/cdn/results/{folder}/{urllib.parse.quote(f["blobName"])}'
+                name = f.get('blobName')
+                if not folder or not name:
+                    continue
+                if '/' in name or '\\' in name or name in ('.', '..') or '/' in folder or '..' in folder:
+                    print(f'SKIPPED report {name!r} in folder {folder!r}: not a plain file name', flush=True)
+                    continue
+                yield f'{SITE}/cdn/results/{folder}/{urllib.parse.quote(name)}'
 
 
 HOURLY_DAYS, DAILY_HOUR, MAX_DAYS, FIVE_MINUTE_HOURS = 3, 15, 45, 24
@@ -129,7 +142,8 @@ def election_days(year):
 def is_official(out, election):
     path = path_for(out, STATUS.format(election=election))
     try:
-        return bool(json.load(open(path)).get('isOfficialResults'))
+        with open(path) as f:
+            return bool(json.load(f).get('isOfficialResults'))
     except (OSError, ValueError):
         return False
 
@@ -196,11 +210,8 @@ def main(out, scheduled=False, now=None, every_5=False):
         status = get_json(out, STATUS.format(election=election))
         if status is None:
             failed += 1
-        export = fetch(EXPORT.format(election=election))
-        if export is None:
+        if get_json(out, EXPORT.format(election=election)) is None:
             failed += 1
-        else:
-            save(out, EXPORT.format(election=election), export)
         for url in reports(status or {}):
             if os.path.isfile(path_for(out, url)):
                 continue
@@ -218,8 +229,10 @@ def main(out, scheduled=False, now=None, every_5=False):
 
 
 if __name__ == '__main__':
-    flags = {'--scheduled', '--every-5-minutes'}
+    flags = {'--scheduled', '--every-5-minutes', '--in-first-day'}
     args = [a for a in sys.argv[1:] if a not in flags]
     if len(args) != 1 or len(flags & set(sys.argv[1:])) > 1:
         sys.exit(__doc__)
+    if '--in-first-day' in sys.argv[1:]:
+        sys.exit(0 if first_day(dt.datetime.now(dt.timezone.utc)) else 1)
     sys.exit(main(args[0], scheduled='--scheduled' in sys.argv[1:], every_5='--every-5-minutes' in sys.argv[1:]))

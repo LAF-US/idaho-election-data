@@ -4,8 +4,7 @@ on:
     branches: [results]
   workflow_dispatch:
   schedule:
-    - cron: '7 * * * *'     # every hour; download_results.py --scheduled decides what is due
-    - cron: '*/5 * * * *'   # every 5 minutes; pulls only an election in its first 24 hours after poll close
+    - cron: '7 * * * *'   # every hour; download_results.py --scheduled decides what is due
 permissions:
   contents: write
 concurrency:
@@ -13,7 +12,7 @@ concurrency:
 jobs:
   download:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 75
     steps:
       - name: Get the repo
         env:
@@ -26,21 +25,29 @@ jobs:
           git remote add origin "https://github.com/$GITHUB_REPOSITORY"
           git fetch -q --depth=1 origin "$GITHUB_REF_NAME"
           git checkout -q -B "$GITHUB_REF_NAME" FETCH_HEAD
-      - name: Download the results site's files
-        env:
-          SCHEDULE: ${{ github.event.schedule }}
-        run: |
-          FLAG=""
-          [ "$GITHUB_EVENT_NAME" = schedule ] && FLAG=--scheduled
-          [ "$SCHEDULE" = "*/5 * * * *" ] && FLAG=--every-5-minutes
-          python3 -I download_results.py . $FLAG || echo "Some downloads failed; saving the rest."
-      - name: Save the files to the repo
+      - name: Download the results site's files and save them to the repo
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
-          [ -d results.voteidaho.gov ] || { echo "Nothing downloaded."; exit 0; }
-          git add results.voteidaho.gov
-          [ -f results_monthly.txt ] && git add results_monthly.txt
-          git diff --cached --quiet && { echo "Nothing new from the results site."; exit 0; }
-          git commit -q -m "Results site files as served"
-          git push origin "HEAD:$GITHUB_REF_NAME"
+          save() {
+            [ -d results.voteidaho.gov ] || { echo "Nothing downloaded."; return 0; }
+            git add results.voteidaho.gov
+            if [ -f results_monthly.txt ]; then git add results_monthly.txt; fi
+            if git diff --cached --quiet; then echo "Nothing new from the results site."; return 0; fi
+            git commit -q -m "Results site files as served"
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          }
+          FLAG=""
+          if [ "$GITHUB_EVENT_NAME" = schedule ]; then FLAG=--scheduled; fi
+          python3 -I download_results.py . $FLAG || echo "Some downloads failed; saving the rest."
+          save
+          # In the first 24 hours after poll close, keep going and pull every 5 minutes until the next
+          # hourly run is due. At any other time this loop doesn't run.
+          if [ "$GITHUB_EVENT_NAME" = schedule ]; then
+            END=$(( $(date +%s) + 55 * 60 ))
+            while python3 -I download_results.py . --in-first-day && [ "$(date +%s)" -lt "$END" ]; do
+              sleep 300
+              python3 -I download_results.py . --every-5-minutes || echo "Some downloads failed; saving the rest."
+              save
+            done
+          fi
