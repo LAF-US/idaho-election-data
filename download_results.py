@@ -187,7 +187,7 @@ def election_days_listed(out, now):
             try:
                 found[e['publicElectionId']] = dt.date.fromisoformat(e['electionDate'][:10])
             except ValueError:
-                pass
+                print(f"Skipped {e['publicElectionId']}'s electionDate {e['electionDate']!r}: not a date", flush=True)
     return list(found.items())
 
 
