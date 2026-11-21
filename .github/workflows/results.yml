@@ -32,22 +32,32 @@ jobs:
           save() {
             [ -d results.voteidaho.gov ] || { echo "Nothing downloaded."; return 0; }
             git add results.voteidaho.gov
-            if [ -f results_monthly.txt ]; then git add results_monthly.txt; fi
+            for f in results_monthly.txt results_official.txt results_daily.txt; do if [ -f "$f" ]; then git add "$f"; fi; done
             if git diff --cached --quiet; then echo "Nothing new from the results site."; return 0; fi
             git commit -q -m "Results site files as served"
-            git push origin "HEAD:$GITHUB_REF_NAME"
+            # If someone else pushed to the branch since this run fetched it, put this commit on top and push again.
+            git push origin "HEAD:$GITHUB_REF_NAME" || {
+              git fetch -q origin "$GITHUB_REF_NAME" && git rebase -q FETCH_HEAD && git push origin "HEAD:$GITHUB_REF_NAME"
+            }
           }
+          FAILED=0
           FLAG=""
           if [ "$GITHUB_EVENT_NAME" = schedule ]; then FLAG=--scheduled; fi
-          python3 -I download_results.py . $FLAG || echo "Some downloads failed; saving the rest."
+          python3 -I download_results.py . $FLAG || FAILED=1
           save
           # In the first 24 hours after poll close, keep going and pull every 5 minutes until the next
           # hourly run is due. At any other time this loop doesn't run.
           if [ "$GITHUB_EVENT_NAME" = schedule ]; then
             END=$(( $(date +%s) + 55 * 60 ))
-            while python3 -I download_results.py . --in-first-day && [ "$(date +%s)" -lt "$END" ]; do
-              sleep 300
-              python3 -I download_results.py . --every-5-minutes || echo "Some downloads failed; saving the rest."
+            NEXT=$(( $(date +%s) + 300 ))
+            while python3 -I download_results.py . --in-first-day && [ "$NEXT" -lt "$END" ]; do
+              # Each pull starts 5 minutes after the last one started, however long that one took.
+              WAIT=$(( NEXT - $(date +%s) ))
+              if [ "$WAIT" -gt 0 ]; then sleep "$WAIT"; fi
+              NEXT=$(( NEXT + 300 ))
+              python3 -I download_results.py . --every-5-minutes || FAILED=1
               save
             done
           fi
+          # Files that downloaded are saved above; the run still shows as failed if any didn't.
+          if [ "$FAILED" = 1 ]; then echo "Some downloads failed; the next run tries them again."; exit 1; fi

@@ -7,16 +7,16 @@ For each election it serves:
   /results/public/api/elections/id/<ELECTION>            the election's status: asOf, isOfficialResults,
                                                          and the reports it publishes
   /cdn/results/id/export-<ELECTION>.json                 the site's "Media Export": every contest's
-                                                         statewide totals and, for each of the 44
-                                                         counties, every contest on its ballot with
-                                                         precinct results
+                                                         statewide totals and, for each county in
+                                                         the export, every contest on its ballot
+                                                         with precinct results
   /cdn/results/<jurisdictionId>/<blobName>               each report the election's status lists in
                                                          publicReportCategories (PDF and Excel), as linked
                                                          from the site's Reports page
 
 Each file goes in a folder that mirrors its address on the site (results.voteidaho.gov/...). The
 JSON files keep their addresses, and a file is replaced only when the site serves something different,
-so the repo's history keeps every version the site served. Report files carry a new name for each
+so the repo's history keeps every version a run saw. Report files carry a new name for each
 version, so each is downloaded once and never replaced.
 
 Each file is downloaded on its own and written under a temporary name, then renamed once complete,
@@ -31,8 +31,10 @@ hour), from the date alone:
     every hour. For the first 24 hours, the hourly run keeps going and pulls it every 5 minutes with
     --every-5-minutes, which pulls only an election within 24 hours of poll close; --in-first-day
     exits 0 while one is, so the workflow knows whether to keep going.
-  - After that: that election once a day (the 15:00 UTC run), until its saved status says
-    isOfficialResults, or 45 days after poll close, whichever comes first.
+  - After that: that election once a day, from the 15:00 UTC run (a later run that day tries again
+    until one pulls it without a failure; OUTDIR/results_daily.txt keeps the day), until its saved status says
+    isOfficialResults and a run has pulled all its files after that, or 45 days after poll close,
+    whichever comes first. The run that does writes the election to OUTDIR/results_official.txt.
   - Every month, from the 15:00 UTC run on the 1st: every election the site lists. The run that pulls
     all of it without a failure writes the month to OUTDIR/results_monthly.txt; until one does, each
     hourly run tries again, so a late or dropped run on the 1st doesn't skip the month.
@@ -49,18 +51,18 @@ EXPORT = SITE + '/cdn/results/id/export-{election}.json'
 
 
 def fetch(url, tries=3):
-    """The body, or None after printing why. A 5xx answer or a dropped connection is tried again."""
+    """The body, or None after printing why. A 429 or 5xx answer or a dropped connection is tried again."""
     for attempt in range(tries):
         try:
             req = urllib.request.Request(url, headers={'User-Agent': 'idaho-election-data'})
-            with urllib.request.urlopen(req, timeout=300) as r:
+            with urllib.request.urlopen(req, timeout=60) as r:
                 body = r.read()
                 if r.status != 200 or not body:
                     print(f'FAILED {url}: HTTP {r.status}, {len(body)} bytes', flush=True)
                     return None
                 return body
         except urllib.error.HTTPError as e:
-            if e.code < 500 or attempt == tries - 1:
+            if (e.code < 500 and e.code != 429) or attempt == tries - 1:
                 print(f'FAILED {url}: {e}', flush=True)
                 return None
         except Exception as e:
@@ -127,7 +129,7 @@ def reports(status):
 
 HOURLY_DAYS, DAILY_HOUR, MAX_DAYS, FIVE_MINUTE_HOURS = 3, 15, 45, 24
 BOISE, POLLS_CLOSE = zoneinfo.ZoneInfo('America/Boise'), 21   # 9 PM Mountain
-MONTHLY = 'results_monthly.txt'
+MONTHLY, OFFICIAL, DAILY = 'results_monthly.txt', 'results_official.txt', 'results_daily.txt'
 MON = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
 
 
@@ -139,37 +141,56 @@ def election_days(year):
     return [nth(5, calendar.TUESDAY, 3), nth(11, calendar.MONDAY, 1) + dt.timedelta(days=1)]
 
 
-def is_official(out, election):
-    path = path_for(out, STATUS.format(election=election))
+def daily_done(out):
+    """The day each election's daily pull last finished without a failure, from OUTDIR/results_daily.txt."""
     try:
-        with open(path) as f:
-            return bool(json.load(f).get('isOfficialResults'))
-    except (OSError, ValueError):
-        return False
+        with open(os.path.join(out, DAILY)) as f:
+            return dict(line.split() for line in f if len(line.split()) == 2)
+    except OSError:
+        return {}
+
+
+def official_done(out):
+    """The elections a run has pulled in full after their status said isOfficialResults."""
+    try:
+        with open(os.path.join(out, OFFICIAL)) as f:
+            return {line.strip() for line in f if line.strip()}
+    except OSError:
+        return set()
 
 
 def monthly_due(out, now):
     if now.day == 1 and now.hour < DAILY_HOUR:
         return False
     try:
-        done = open(os.path.join(out, MONTHLY)).read().strip()
+        with open(os.path.join(out, MONTHLY)) as f:
+            done = f.read().strip()
     except OSError:
         done = ''
     return done != f'{now:%Y-%m}'
 
 
+def daily_phase(election, now):
+    """True when election is past its 72 hourly hours and inside its 45 days."""
+    for day in election_days(now.year - 1) + election_days(now.year):
+        if f'{MON[day.month - 1]}{day.year}' == election:
+            start = dt.datetime(day.year, day.month, day.day, POLLS_CLOSE, tzinfo=BOISE).astimezone(dt.timezone.utc)
+            return dt.timedelta(days=HOURLY_DAYS) <= now - start < dt.timedelta(days=MAX_DAYS)
+    return False
+
+
 def window(out, now):
     """The elections in an election-day window at this hour: hourly for 72 hours from poll close, then
     the 15:00 UTC run each day until the saved status says official, or 45 days after poll close."""
-    found = []
+    found, done, daily = [], official_done(out), daily_done(out)
     for day in election_days(now.year - 1) + election_days(now.year):
         election = f'{MON[day.month - 1]}{day.year}'
         start = dt.datetime(day.year, day.month, day.day, POLLS_CLOSE, tzinfo=BOISE).astimezone(dt.timezone.utc)
         age = now - start
         if dt.timedelta(0) <= age < dt.timedelta(days=HOURLY_DAYS):
             found.append(election)
-        elif dt.timedelta(days=HOURLY_DAYS) <= age < dt.timedelta(days=MAX_DAYS) and now.hour == DAILY_HOUR \
-                and not is_official(out, election):
+        elif dt.timedelta(days=HOURLY_DAYS) <= age < dt.timedelta(days=MAX_DAYS) and now.hour >= DAILY_HOUR \
+                and election not in done and daily.get(election) != f'{now:%Y-%m-%d}':
             found.append(election)
     return found
 
@@ -198,8 +219,12 @@ def main(out, scheduled=False, now=None, every_5=False):
     if site is None:
         print('The site did not serve its list of elections. Nothing downloaded; run again later.', flush=True)
         return 1
-    elections = [e['publicElectionId'] for e in site.get('elections') or [] if e.get('publicElectionId')]
+    listed = site.get('elections') if isinstance(site, dict) else None
+    elections = [e['publicElectionId'] for e in listed or [] if isinstance(e, dict) and e.get('publicElectionId')]
     print(f'{len(elections)} elections listed: {", ".join(elections)}', flush=True)
+    if not elections:
+        print('The site listed no elections. Counted as a failure; run again later.', flush=True)
+        return 1
     if scheduled and not monthly:
         missing = [e for e in wanted if e not in elections]
         if missing:
@@ -207,19 +232,32 @@ def main(out, scheduled=False, now=None, every_5=False):
         elections = [e for e in elections if e in wanted]
         print(f'Due this hour: {", ".join(elections) or "none the site lists"}', flush=True)
     for election in elections:
+        before = failed
         status = get_json(out, STATUS.format(election=election))
         if status is None:
             failed += 1
         if get_json(out, EXPORT.format(election=election)) is None:
             failed += 1
-        for url in reports(status or {}):
+        for url in reports(status if isinstance(status, dict) else {}):
             if os.path.isfile(path_for(out, url)):
                 continue
             body = fetch(url)
             if body is None:
                 failed += 1
+            elif not body.startswith((b'%PDF', b'PK')):
+                print(f'FAILED {url}: not a PDF or Excel file ({body[:60]!r})', flush=True)
+                failed += 1
             else:
                 save(out, url, body)
+        if scheduled and failed == before and daily_phase(election, now):
+            daily = daily_done(out)
+            daily[election] = f'{now:%Y-%m-%d}'
+            with open(os.path.join(out, DAILY), 'w') as f:
+                f.writelines(f'{e} {d}\n' for e, d in sorted(daily.items()))
+        if isinstance(status, dict) and status.get('isOfficialResults') and failed == before and election not in official_done(out):
+            with open(os.path.join(out, OFFICIAL), 'a') as f:
+                f.write(f'{election}\n')
+            print(f'{election}: official, all files pulled.', flush=True)
     if monthly and not failed:
         with open(os.path.join(out, MONTHLY), 'w') as f:
             f.write(f'{now:%Y-%m}\n')
@@ -229,6 +267,8 @@ def main(out, scheduled=False, now=None, every_5=False):
 
 
 if __name__ == '__main__':
+    if {'-h', '--help'} & set(sys.argv[1:]):
+        sys.exit(__doc__)
     flags = {'--scheduled', '--every-5-minutes', '--in-first-day'}
     args = [a for a in sys.argv[1:] if a not in flags]
     if len(args) != 1 or len(flags & set(sys.argv[1:])) > 1:
