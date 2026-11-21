@@ -44,7 +44,7 @@ jobs:
           FLAG=""
           if [ "$GITHUB_EVENT_NAME" = schedule ]; then FLAG=--scheduled; fi
           python3 -I download_results.py . $FLAG || FAILED=1
-          save
+          save || FAILED=1
           # In the first 24 hours after poll close, keep going and pull every 5 minutes until the next
           # hourly run is due. At any other time this loop doesn't run.
           if [ "$GITHUB_EVENT_NAME" = schedule ]; then
@@ -56,8 +56,8 @@ jobs:
               if [ "$WAIT" -gt 0 ]; then sleep "$WAIT"; fi
               NEXT=$(( NEXT + 300 ))
               python3 -I download_results.py . --every-5-minutes || FAILED=1
-              save
+              save || FAILED=1
             done
           fi
-          # Files that downloaded are saved above; the run still shows as failed if any didn't.
-          if [ "$FAILED" = 1 ]; then echo "Some downloads failed; the next run tries them again."; exit 1; fi
+          # Files that downloaded are saved above; the run still shows as failed if any didn't, or if a save didn't push.
+          if [ "$FAILED" = 1 ]; then echo "Some downloads or saves failed; the next run tries them again."; exit 1; fi
