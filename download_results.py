@@ -109,7 +109,11 @@ def get_json(out, url):
     except ValueError:
         print(f'FAILED {url}: not JSON ({body[:60]!r})', flush=True)
         return None
-    save(out, url, body)
+    try:
+        save(out, url, body)
+    except ValueError as e:
+        print(f'FAILED {e}', flush=True)
+        return None
     return j
 
 
@@ -126,7 +130,7 @@ def reports(status):
                     print(f'FAILED report {name!r} in folder {folder!r}: not a plain file name', flush=True)
                     yield None
                     continue
-                yield f'{SITE}/cdn/results/{folder}/{urllib.parse.quote(name)}'
+                yield f'{SITE}/cdn/results/{urllib.parse.quote(folder, safe="")}/{urllib.parse.quote(name, safe="")}'
 
 
 HOURLY_DAYS, DAILY_HOUR, MAX_DAYS, FIVE_MINUTE_HOURS = 3, 15, 45, 24
@@ -230,10 +234,6 @@ def main(out, scheduled=False, now=None, every_5=False):
     monthly = scheduled and not every_5 and monthly_due(out, now)
     failed = 0
     site = get_json(out, ELECTIONS)   # saved first, so a newly listed election's date counts this run
-    wanted = (first_day(out, now) if every_5 else window(out, now)) if scheduled else []
-    if scheduled and not monthly and not wanted:
-        print(f'Nothing due at {now:%Y-%m-%d %H:%M} UTC.', flush=True)
-        return 0
     if site is None:
         print('The site did not serve its list of elections. Nothing downloaded; run again later.', flush=True)
         return 1
@@ -243,6 +243,10 @@ def main(out, scheduled=False, now=None, every_5=False):
     if not elections:
         print('The site listed no elections. Counted as a failure; run again later.', flush=True)
         return 1
+    wanted = (first_day(out, now) if every_5 else window(out, now)) if scheduled else []
+    if scheduled and not monthly and not wanted:
+        print(f'Nothing due at {now:%Y-%m-%d %H:%M} UTC.', flush=True)
+        return 0
     if scheduled and not monthly:
         missing = [e for e in wanted if e not in elections]
         if missing:
@@ -251,18 +255,23 @@ def main(out, scheduled=False, now=None, every_5=False):
         print(f'Due this hour: {", ".join(elections) or "none the site lists"}', flush=True)
     for election in elections:
         before = failed
-        status = get_json(out, STATUS.format(election=election))
+        status = get_json(out, STATUS.format(election=urllib.parse.quote(election, safe='')))
         if not isinstance(status, dict):
             if status is not None:
                 print(f'FAILED {election}: status is not a JSON object', flush=True)
             failed += 1
-        if get_json(out, EXPORT.format(election=election)) is None:
+        if get_json(out, EXPORT.format(election=urllib.parse.quote(election, safe=''))) is None:
             failed += 1
         for url in reports(status if isinstance(status, dict) else {}):
             if url is None:
                 failed += 1
                 continue
-            if os.path.isfile(path_for(out, url)):
+            try:
+                if os.path.isfile(path_for(out, url)):
+                    continue
+            except ValueError as e:
+                print(f'FAILED {e}', flush=True)
+                failed += 1
                 continue
             body = fetch(url)
             if body is None:
@@ -271,7 +280,11 @@ def main(out, scheduled=False, now=None, every_5=False):
                 print(f'FAILED {url}: not a PDF or Excel file ({body[:60]!r})', flush=True)
                 failed += 1
             else:
-                save(out, url, body)
+                try:
+                    save(out, url, body)
+                except ValueError as e:
+                    print(f'FAILED {e}', flush=True)
+                    failed += 1
         if scheduled and failed == before and daily_phase(out, election, now):
             daily = daily_done(out)
             daily[election] = f'{now:%Y-%m-%d}'
