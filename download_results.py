@@ -113,7 +113,7 @@ def get_json(out, url):
 
 
 def reports(status):
-    """The address of every report file the election's status lists."""
+    """The address of every report file the election's status lists; None for a listed name that isn't a plain file name."""
     folder = status.get('jurisdictionId')
     for cat in status.get('publicReportCategories') or []:
         for rep in cat.get('reports') or []:
@@ -122,7 +122,8 @@ def reports(status):
                 if not folder or not name:
                     continue
                 if '/' in name or '\\' in name or name in ('.', '..') or '/' in folder or '..' in folder:
-                    print(f'SKIPPED report {name!r} in folder {folder!r}: not a plain file name', flush=True)
+                    print(f'FAILED report {name!r} in folder {folder!r}: not a plain file name', flush=True)
+                    yield None
                     continue
                 yield f'{SITE}/cdn/results/{folder}/{urllib.parse.quote(name)}'
 
@@ -234,17 +235,22 @@ def main(out, scheduled=False, now=None, every_5=False):
     for election in elections:
         before = failed
         status = get_json(out, STATUS.format(election=election))
-        if status is None:
+        if not isinstance(status, dict):
+            if status is not None:
+                print(f'FAILED {election}: status is not a JSON object', flush=True)
             failed += 1
         if get_json(out, EXPORT.format(election=election)) is None:
             failed += 1
         for url in reports(status if isinstance(status, dict) else {}):
+            if url is None:
+                failed += 1
+                continue
             if os.path.isfile(path_for(out, url)):
                 continue
             body = fetch(url)
             if body is None:
                 failed += 1
-            elif not body.startswith((b'%PDF', b'PK')):
+            elif not body.startswith((b'%PDF', b'PK', b'\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1')):
                 print(f'FAILED {url}: not a PDF or Excel file ({body[:60]!r})', flush=True)
                 failed += 1
             else:
@@ -268,7 +274,8 @@ def main(out, scheduled=False, now=None, every_5=False):
 
 if __name__ == '__main__':
     if {'-h', '--help'} & set(sys.argv[1:]):
-        sys.exit(__doc__)
+        print(__doc__)
+        sys.exit(0)
     flags = {'--scheduled', '--every-5-minutes', '--in-first-day'}
     args = [a for a in sys.argv[1:] if a not in flags]
     if len(args) != 1 or len(flags & set(sys.argv[1:])) > 1:
