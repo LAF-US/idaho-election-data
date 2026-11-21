@@ -122,7 +122,7 @@ def reports(status):
                 name = f.get('blobName')
                 if not folder or not name:
                     continue
-                if '/' in name or '\\' in name or name in ('.', '..') or '/' in folder or '..' in folder:
+                if any('/' in x or '\\' in x or '\0' in x or x in ('.', '..') for x in (name, folder)) or '..' in folder:
                     print(f'FAILED report {name!r} in folder {folder!r}: not a plain file name', flush=True)
                     yield None
                     continue
