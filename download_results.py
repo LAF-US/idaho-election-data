@@ -24,9 +24,10 @@ so a download that stops partway never replaces a saved file. A file that fails 
 others; the next run tries it again.
 
 With --scheduled, it pulls only what your schedule calls for at this hour (the workflow runs it every
-hour), from the date alone:
-  - Election days come from Idaho Code 34-106(1): the third Tuesday in May and the Tuesday following
-    the first Monday in November, every year.
+hour), from the current time and its tracking files:
+  - Election days come from Idaho Code 34-106(1), the third Tuesday in May and the Tuesday following
+    the first Monday in November, every year, and from the electionDate of every election the site
+    lists, which adds special and runoff elections. Each run saves the site's list first.
   - From poll close on election day (9 PM Mountain, America/Boise time) for 72 hours: that election,
     every hour. For the first 24 hours, the hourly run keeps going and pulls it every 5 minutes with
     --every-5-minutes, which pulls only an election within 24 hours of poll close; --in-first-day
@@ -171,12 +172,34 @@ def monthly_due(out, now):
     return done != f'{now:%Y-%m}'
 
 
-def daily_phase(election, now):
+def election_days_listed(out, now):
+    """(election, day) for each election day: the statute's May and November days for this year and last,
+    named the way the site names them (nov2026), and every election date in the site's list as last saved,
+    which adds special and runoff elections the statute doesn't fix."""
+    found = {f'{MON[d.month - 1]}{d.year}': d for d in election_days(now.year - 1) + election_days(now.year)}
+    try:
+        with open(path_for(out, ELECTIONS)) as f:
+            site = json.load(f)
+    except (OSError, ValueError):
+        site = None
+    for e in (site.get('elections') if isinstance(site, dict) else None) or []:
+        if isinstance(e, dict) and e.get('publicElectionId') and isinstance(e.get('electionDate'), str):
+            try:
+                found[e['publicElectionId']] = dt.date.fromisoformat(e['electionDate'][:10])
+            except ValueError:
+                pass
+    return list(found.items())
+
+
+def poll_close(day):
+    return dt.datetime(day.year, day.month, day.day, POLLS_CLOSE, tzinfo=BOISE).astimezone(dt.timezone.utc)
+
+
+def daily_phase(out, election, now):
     """True when election is past its 72 hourly hours and inside its 45 days."""
-    for day in election_days(now.year - 1) + election_days(now.year):
-        if f'{MON[day.month - 1]}{day.year}' == election:
-            start = dt.datetime(day.year, day.month, day.day, POLLS_CLOSE, tzinfo=BOISE).astimezone(dt.timezone.utc)
-            return dt.timedelta(days=HOURLY_DAYS) <= now - start < dt.timedelta(days=MAX_DAYS)
+    for name, day in election_days_listed(out, now):
+        if name == election:
+            return dt.timedelta(days=HOURLY_DAYS) <= now - poll_close(day) < dt.timedelta(days=MAX_DAYS)
     return False
 
 
@@ -184,10 +207,8 @@ def window(out, now):
     """The elections in an election-day window at this hour: hourly for 72 hours from poll close, then
     the 15:00 UTC run each day until the saved status says official, or 45 days after poll close."""
     found, done, daily = [], official_done(out), daily_done(out)
-    for day in election_days(now.year - 1) + election_days(now.year):
-        election = f'{MON[day.month - 1]}{day.year}'
-        start = dt.datetime(day.year, day.month, day.day, POLLS_CLOSE, tzinfo=BOISE).astimezone(dt.timezone.utc)
-        age = now - start
+    for election, day in election_days_listed(out, now):
+        age = now - poll_close(day)
         if dt.timedelta(0) <= age < dt.timedelta(days=HOURLY_DAYS):
             found.append(election)
         elif dt.timedelta(days=HOURLY_DAYS) <= age < dt.timedelta(days=MAX_DAYS) and now.hour >= DAILY_HOUR \
@@ -196,14 +217,10 @@ def window(out, now):
     return found
 
 
-def first_day(now):
+def first_day(out, now):
     """The elections within 24 hours of poll close, which the 5-minute run pulls."""
-    found = []
-    for day in election_days(now.year - 1) + election_days(now.year):
-        start = dt.datetime(day.year, day.month, day.day, POLLS_CLOSE, tzinfo=BOISE).astimezone(dt.timezone.utc)
-        if dt.timedelta(0) <= now - start < dt.timedelta(hours=FIVE_MINUTE_HOURS):
-            found.append(f'{MON[day.month - 1]}{day.year}')
-    return found
+    return [e for e, day in election_days_listed(out, now)
+            if dt.timedelta(0) <= now - poll_close(day) < dt.timedelta(hours=FIVE_MINUTE_HOURS)]
 
 
 def main(out, scheduled=False, now=None, every_5=False):
@@ -211,12 +228,12 @@ def main(out, scheduled=False, now=None, every_5=False):
     if every_5:
         scheduled = True
     monthly = scheduled and not every_5 and monthly_due(out, now)
-    wanted = (first_day(now) if every_5 else window(out, now)) if scheduled else []
+    failed = 0
+    site = get_json(out, ELECTIONS)   # saved first, so a newly listed election's date counts this run
+    wanted = (first_day(out, now) if every_5 else window(out, now)) if scheduled else []
     if scheduled and not monthly and not wanted:
         print(f'Nothing due at {now:%Y-%m-%d %H:%M} UTC.', flush=True)
         return 0
-    failed = 0
-    site = get_json(out, ELECTIONS)
     if site is None:
         print('The site did not serve its list of elections. Nothing downloaded; run again later.', flush=True)
         return 1
@@ -255,7 +272,7 @@ def main(out, scheduled=False, now=None, every_5=False):
                 failed += 1
             else:
                 save(out, url, body)
-        if scheduled and failed == before and daily_phase(election, now):
+        if scheduled and failed == before and daily_phase(out, election, now):
             daily = daily_done(out)
             daily[election] = f'{now:%Y-%m-%d}'
             with open(os.path.join(out, DAILY), 'w') as f:
@@ -281,5 +298,5 @@ if __name__ == '__main__':
     if len(args) != 1 or len(flags & set(sys.argv[1:])) > 1:
         sys.exit(__doc__)
     if '--in-first-day' in sys.argv[1:]:
-        sys.exit(0 if first_day(dt.datetime.now(dt.timezone.utc)) else 1)
+        sys.exit(0 if first_day(args[0], dt.datetime.now(dt.timezone.utc)) else 1)
     sys.exit(main(args[0], scheduled='--scheduled' in sys.argv[1:], every_5='--every-5-minutes' in sys.argv[1:]))
