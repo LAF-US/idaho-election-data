@@ -7,6 +7,7 @@ on:
     - cron: '7 * * * *'   # every hour; download_results.py --scheduled decides what is due
 permissions:
   contents: write
+  actions: write   # lets the run re-enable this workflow, so GitHub's 60-day inactivity rule never turns the schedule off
 concurrency:
   group: download-results
 jobs:
@@ -25,6 +26,13 @@ jobs:
           git remote add origin "https://github.com/$GITHUB_REPOSITORY"
           git fetch -q --depth=1 origin "$GITHUB_REF_NAME"
           git checkout -q -B "$GITHUB_REF_NAME" FETCH_HEAD
+      - name: Keep the hourly schedule switched on
+        if: github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        # GitHub turns off a public repo's schedules after 60 days with no repo activity. Between
+        # elections nothing gets committed, so each scheduled run re-enables this workflow instead.
+        run: gh api -X PUT "repos/$GITHUB_REPOSITORY/actions/workflows/results.yml/enable"
       - name: Download the results site's files and save them to the repo
         run: |
           git config user.name "github-actions[bot]"
