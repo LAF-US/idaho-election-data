@@ -42,13 +42,13 @@ jobs:
             git add results.voteidaho.gov
             for f in results_official.txt results_daily.txt; do if [ -f "$f" ]; then git add "$f"; fi; done
             if git diff --cached --quiet; then echo "Nothing new from the results site."; return 0; fi
-            git commit -q -m "Results site files as served"
+            git commit -q -m "Results site files as served" || return 1
             # If someone else pushed to the branch since this run fetched it, put this commit on top and push again.
             git push origin "HEAD:$GITHUB_REF_NAME" || {
               git fetch -q origin "$GITHUB_REF_NAME" && git rebase -q FETCH_HEAD && git push origin "HEAD:$GITHUB_REF_NAME"
             }
           }
-          START=$(date +%s)   # the 55 minutes count from here, so the last pull starts well inside the 75-minute job
+          START=$(date +%s)   # pulls run at minutes 5 to 55 counted from here; the next hourly run takes over at 60
           FAILED=0
           FLAG=""
           if [ "$GITHUB_EVENT_NAME" = schedule ]; then FLAG=--scheduled; fi
@@ -59,7 +59,7 @@ jobs:
           if [ "$GITHUB_EVENT_NAME" = schedule ]; then
             END=$(( START + 55 * 60 ))
             NEXT=$(( START + 300 ))
-            while python3 -I download_results.py . --in-first-day && [ "$NEXT" -lt "$END" ] && [ "$(date +%s)" -lt "$END" ]; do
+            while python3 -I download_results.py . --in-first-day && [ "$NEXT" -le "$END" ] && [ "$(date +%s)" -lt "$END" ]; do
               # Each pull starts 5 minutes after the last one started, however long that one took.
               WAIT=$(( NEXT - $(date +%s) ))
               if [ "$WAIT" -gt 0 ]; then sleep "$WAIT"; fi
