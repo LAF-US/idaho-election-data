@@ -23,4 +23,4 @@ The workflow wakes every hour and runs `download_results.py --scheduled`, which 
 - **Until official:** after that, once a day, from the 15:00 UTC run (if that run is late or fails, the next run that day tries again; `results_daily.txt` keeps the day), until its status says `isOfficialResults` and a run has pulled all its files after that (that run writes the election to `results_official.txt`), or 45 days after poll close.
 - **By hand:** Actions > Download election-night results > Run workflow pulls every election the site lists.
 
-GitHub runs scheduled workflows only from the default branch, so the schedule starts once this is on `main`.
+GitHub runs scheduled workflows only from the default branch, so the schedule starts once this is on `main`. Every run saves the files it downloads to the `results` branch, not `main`.
