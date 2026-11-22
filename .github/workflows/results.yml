@@ -32,7 +32,7 @@ jobs:
           save() {
             [ -d results.voteidaho.gov ] || { echo "Nothing downloaded."; return 0; }
             git add results.voteidaho.gov
-            for f in results_monthly.txt results_official.txt results_daily.txt; do if [ -f "$f" ]; then git add "$f"; fi; done
+            for f in results_official.txt results_daily.txt; do if [ -f "$f" ]; then git add "$f"; fi; done
             if git diff --cached --quiet; then echo "Nothing new from the results site."; return 0; fi
             git commit -q -m "Results site files as served"
             # If someone else pushed to the branch since this run fetched it, put this commit on top and push again.

@@ -36,9 +36,6 @@ hour), from the current time and its tracking files:
     until one pulls it without a failure; OUTDIR/results_daily.txt keeps the day), until its saved status says
     isOfficialResults and a run has pulled all its files after that, or 45 days after poll close,
     whichever comes first. The run that does writes the election to OUTDIR/results_official.txt.
-  - Every month, from the 15:00 UTC run on the 1st: every election the site lists. The run that pulls
-    all of it without a failure writes the month to OUTDIR/results_monthly.txt; until one does, each
-    hourly run tries again, so a late or dropped run on the 1st doesn't skip the month.
 Without --scheduled, it pulls every election the site lists.
 
   python3 download_results.py OUTDIR [--scheduled | --every-5-minutes | --in-first-day]
@@ -135,7 +132,7 @@ def reports(status):
 
 HOURLY_DAYS, DAILY_HOUR, MAX_DAYS, FIVE_MINUTE_HOURS = 3, 15, 45, 24
 BOISE, POLLS_CLOSE = zoneinfo.ZoneInfo('America/Boise'), 21   # 9 PM Mountain
-MONTHLY, OFFICIAL, DAILY = 'results_monthly.txt', 'results_official.txt', 'results_daily.txt'
+OFFICIAL, DAILY = 'results_official.txt', 'results_daily.txt'
 MON = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
 
 
@@ -163,17 +160,6 @@ def official_done(out):
             return {line.strip() for line in f if line.strip()}
     except OSError:
         return set()
-
-
-def monthly_due(out, now):
-    if now.day == 1 and now.hour < DAILY_HOUR:
-        return False
-    try:
-        with open(os.path.join(out, MONTHLY)) as f:
-            done = f.read().strip()
-    except OSError:
-        done = ''
-    return done != f'{now:%Y-%m}'
 
 
 def election_days_listed(out, now):
@@ -231,7 +217,6 @@ def main(out, scheduled=False, now=None, every_5=False):
     now = now or dt.datetime.now(dt.timezone.utc)
     if every_5:
         scheduled = True
-    monthly = scheduled and not every_5 and monthly_due(out, now)
     failed = 0
     site = get_json(out, ELECTIONS)   # saved first, so a newly listed election's date counts this run
     if site is None:
@@ -244,10 +229,10 @@ def main(out, scheduled=False, now=None, every_5=False):
         print('The site listed no elections. Counted as a failure; run again later.', flush=True)
         return 1
     wanted = (first_day(out, now) if every_5 else window(out, now)) if scheduled else []
-    if scheduled and not monthly and not wanted:
+    if scheduled and not wanted:
         print(f'Nothing due at {now:%Y-%m-%d %H:%M} UTC.', flush=True)
         return 0
-    if scheduled and not monthly:
+    if scheduled:
         missing = [e for e in wanted if e not in elections]
         if missing:
             print(f'In its election window but not listed by the site: {", ".join(missing)}', flush=True)
@@ -294,10 +279,6 @@ def main(out, scheduled=False, now=None, every_5=False):
             with open(os.path.join(out, OFFICIAL), 'a') as f:
                 f.write(f'{election}\n')
             print(f'{election}: official, all files pulled.', flush=True)
-    if monthly and not failed:
-        with open(os.path.join(out, MONTHLY), 'w') as f:
-            f.write(f'{now:%Y-%m}\n')
-        print(f'Monthly pull for {now:%Y-%m} done.', flush=True)
     print(f'Done, {failed} failed.', flush=True)
     return 1 if failed else 0
 
