@@ -114,6 +114,11 @@ def get_json(out, url):
     return j
 
 
+def plain_name(x):
+    """True for a name the site gives that can stand as one file or folder name: no slash, backslash or NUL, not . or .."""
+    return isinstance(x, str) and x not in ('.', '..') and not any(c in x for c in '/\\\0')
+
+
 def reports(status):
     """The address of every report file the election's status lists; None for a listed name that isn't a plain file name."""
     folder = status.get('jurisdictionId')
@@ -123,7 +128,7 @@ def reports(status):
                 name = f.get('blobName')
                 if not folder or not name:
                     continue
-                if any('/' in x or '\\' in x or '\0' in x or x in ('.', '..') for x in (name, folder)) or '..' in folder:
+                if not (plain_name(name) and plain_name(folder)) or '..' in folder:
                     print(f'FAILED report {name!r} in folder {folder!r}: not a plain file name', flush=True)
                     yield None
                     continue
@@ -224,7 +229,7 @@ def main(out, scheduled=False, now=None, every_5=False):
         return 1
     listed = site.get('elections') if isinstance(site, dict) else None
     elections = [e['publicElectionId'] for e in listed or [] if isinstance(e, dict) and e.get('publicElectionId')]
-    print(f'{len(elections)} elections listed: {", ".join(elections)}', flush=True)
+    print(f'{len(elections)} elections listed: {", ".join(map(str, elections))}', flush=True)
     if not elections:
         print('The site listed no elections. Counted as a failure; run again later.', flush=True)
         return 1
@@ -240,6 +245,10 @@ def main(out, scheduled=False, now=None, every_5=False):
         print(f'Due this hour: {", ".join(elections) or "none the site lists"}', flush=True)
     for election in elections:
         before = failed
+        if not plain_name(election):
+            print(f'FAILED election {election!r}: not a plain name', flush=True)
+            failed += 1
+            continue
         status = get_json(out, STATUS.format(election=urllib.parse.quote(election, safe='')))
         if not isinstance(status, dict):
             if status is not None:
