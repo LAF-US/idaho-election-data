@@ -48,13 +48,20 @@ jobs:
             [ -d results.voteidaho.gov ] || { echo "Nothing downloaded."; return 0; }
             git add results.voteidaho.gov
             for f in results_official.txt results_daily.txt; do if [ -f "$f" ]; then git add "$f"; fi; done
-            if git diff --cached --quiet; then echo "Nothing new from the results site."; return 0; fi
-            git commit -q -m "Results site files as served" || return 1
+            if git diff --cached --quiet; then
+              echo "Nothing new from the results site."
+            else
+              git commit -q -m "Results site files as served" || return 1
+              UNPUSHED=1
+            fi
+            # A commit an earlier pull in this run couldn't push is pushed now too, even when nothing new came.
+            [ "$UNPUSHED" = 1 ] || return 0
             # If someone else pushed to the branch since this run fetched it, put this commit on top and push again.
-            git push origin "HEAD:$GITHUB_REF_NAME" || {
+            if git push origin "HEAD:$GITHUB_REF_NAME" || {
               git fetch -q origin "$GITHUB_REF_NAME" && git rebase -q FETCH_HEAD && git push origin "HEAD:$GITHUB_REF_NAME"
-            }
+            }; then UNPUSHED=0; else return 1; fi
           }
+          UNPUSHED=0
           START=$(date +%s)   # pulls run at minutes 5 to 55 counted from here; the next hourly run takes over at 60
           FAILED=0
           FLAG=""
