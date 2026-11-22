@@ -115,21 +115,19 @@ def get_json(out, url):
 
 
 def plain_name(x):
-    """True for a name the site gives that can stand as one file or folder name: no slash, backslash or NUL, not . or .."""
-    return isinstance(x, str) and x not in ('.', '..') and not any(c in x for c in '/\\\0')
+    """True for a name the site gives that can stand as one file or folder name: not empty, no slash, backslash or NUL, not . or .."""
+    return isinstance(x, str) and x not in ('', '.', '..') and not any(c in x for c in '/\\\0')
 
 
 def reports(status):
-    """The address of every report file the election's status lists; None for a listed name that isn't a plain file name."""
+    """The address of every report file the election's status lists; None for a listed report whose name or folder is missing or isn't a plain file name."""
     folder = status.get('jurisdictionId')
     for cat in status.get('publicReportCategories') or []:
         for rep in cat.get('reports') or []:
             for f in [rep] + (rep.get('versions') or []):
                 name = f.get('blobName')
-                if not folder or not name:
-                    continue
                 if not (plain_name(name) and plain_name(folder)) or '..' in folder:
-                    print(f'FAILED report {name!r} in folder {folder!r}: not a plain file name', flush=True)
+                    print(f'FAILED report {name!r} in folder {folder!r}: missing or not a plain file name', flush=True)
                     yield None
                     continue
                 yield f'{SITE}/cdn/results/{urllib.parse.quote(folder, safe="")}/{urllib.parse.quote(name, safe="")}'
