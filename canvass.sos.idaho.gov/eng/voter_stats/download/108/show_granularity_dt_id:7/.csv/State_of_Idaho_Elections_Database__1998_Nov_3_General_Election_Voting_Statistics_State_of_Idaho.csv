@@ -1,0 +1,983 @@
+County,"Number Election Day Registrants","Total Number Registered Voters","Total Ballots Cast"
+Totals,"36,522","661,433","386,720"
+Ada,"13,018","162,683","93,509"
+"Precinct Absentee 1",0,0,6
+"Precinct Absentee 10",0,0,909
+"Precinct Absentee 11",0,0,43
+"Precinct Absentee 12",0,0,614
+"Precinct Absentee 13",0,0,178
+"Precinct Absentee 14",0,0,350
+"Precinct Absentee 15",0,0,262
+"Precinct Absentee 16",0,0,111
+"Precinct Absentee 17",0,0,866
+"Precinct Absentee 18",0,0,250
+"Precinct Absentee 19",0,0,74
+"Precinct Absentee 2",0,0,137
+"Precinct Absentee 20",0,0,"1,260"
+"Precinct Absentee 3",0,0,"1,278"
+"Precinct Absentee 4",0,0,222
+"Precinct Absentee 5",0,0,727
+"Precinct Absentee 6",0,0,"1,299"
+"Precinct Absentee 7",0,0,575
+"Precinct Absentee 8",0,0,"1,030"
+"Precinct Absentee 9",0,0,498
+"Precinct 1",96,"1,093",456
+"Precinct 2",54,936,410
+"Precinct 3",88,"1,161",564
+"Precinct 4",82,851,303
+"Precinct 5",94,905,279
+"Precinct 6",58,"1,074",617
+"Precinct 7",77,851,374
+"Precinct 8",59,"1,002",370
+"Precinct 9",90,"1,481",740
+"Precinct 10",34,853,494
+"Precinct 11",109,965,363
+"Precinct 12",88,"1,398",796
+"Precinct 13",60,889,415
+"Precinct 14",105,"1,184",495
+"Precinct 15",135,"1,483",762
+"Precinct 16",176,"2,175","1,020"
+"Precinct 17",117,"1,137",510
+"Precinct 18",151,"1,388",780
+"Precinct 19",121,"1,016",473
+"Precinct 20",137,"1,651",739
+"Precinct 21",117,"1,119",532
+"Precinct 22",98,"1,059",593
+"Precinct 23",87,916,434
+"Precinct 24",95,"1,227",691
+"Precinct 25",114,"1,429",810
+"Precinct 26",93,832,292
+"Precinct 27",115,"1,642",813
+"Precinct 28",48,694,318
+"Precinct 29",64,975,544
+"Precinct 30",77,975,482
+"Precinct 31",127,"1,523",810
+"Precinct 32",130,"1,020",415
+"Precinct 33",76,962,467
+"Precinct 34",80,"1,081",560
+"Precinct 35",82,"1,002",513
+"Precinct 36",69,"1,150",583
+"Precinct 37",68,853,442
+"Precinct 38",83,"1,640",601
+"Precinct 39",119,"1,514",612
+"Precinct 40",61,935,460
+"Precinct 41",67,680,345
+"Precinct 42",60,985,545
+"Precinct 43",57,922,472
+"Precinct 44",62,"1,029",542
+"Precinct 45",79,"1,129",615
+"Precinct 46",24,508,296
+"Precinct 47",117,"1,027",540
+"Precinct 48",58,934,501
+"Precinct 49",64,887,465
+"Precinct 50",94,"1,633",872
+"Precinct 51",66,889,437
+"Precinct 52",95,"1,456",900
+"Precinct 53",110,"1,426",711
+"Precinct 54",39,925,575
+"Precinct 55",40,890,507
+"Precinct 56",62,"1,058",536
+"Precinct 57",30,691,405
+"Precinct 58",33,799,497
+"Precinct 59",41,934,575
+"Precinct 60",57,816,479
+"Precinct 61",89,"1,064",519
+"Precinct 62",75,"1,129",604
+"Precinct 63",97,"1,588",827
+"Precinct 64",94,"1,342",745
+"Precinct 65",91,"1,305",735
+"Precinct 66",103,"1,113",651
+"Precinct 67",176,"1,761","1,028"
+"Precinct 68",179,"1,849","1,008"
+"Precinct 69",20,261,104
+"Precinct 70",2,63,40
+"Precinct 71",121,"1,174",498
+"Precinct 72",76,846,438
+"Precinct 73",211,"2,136","1,057"
+"Precinct 74",131,"1,279",738
+"Precinct 75",58,"1,116",575
+"Precinct 76",56,"1,211",670
+"Precinct 77",107,"1,128",598
+"Precinct 78",65,731,398
+"Precinct 79",105,"1,734",933
+"Precinct 80",226,"1,638",492
+"Precinct 81",71,800,288
+"Precinct 82",313,"1,989",940
+"Precinct 83",134,"1,009",589
+"Precinct 84",92,"1,462",683
+"Precinct 85",72,"1,440",761
+"Precinct 86",143,"1,900",869
+"Precinct 87",151,"2,143","1,073"
+"Precinct 88",81,"2,045",947
+"Precinct 89",110,"1,116",556
+"Precinct 90",121,"1,604",884
+"Precinct 91",231,"2,477","1,395"
+"Precinct 92",36,792,430
+"Precinct 93",50,"1,058",571
+"Precinct 94",23,499,301
+"Precinct 95",213,"1,944",902
+"Precinct 96",142,"1,696",669
+"Precinct 97",84,"1,235",645
+"Precinct 98",117,"2,058",959
+"Precinct 99",89,"1,669",980
+"Precinct 100",154,"1,324",744
+"Precinct 101",70,"1,417",767
+"Precinct 102",156,"1,632",931
+"Precinct 103",91,"1,530",789
+"Precinct 104",36,603,287
+"Precinct 105",180,"1,369",841
+"Precinct 106",143,"1,365",740
+"Precinct 107",179,"2,278","1,126"
+"Precinct 108",48,662,375
+"Precinct 109",23,449,254
+"Precinct 110",162,"1,341",655
+"Precinct 111",247,"1,974","1,033"
+"Precinct 112",61,"1,009",518
+"Precinct 113",73,"1,132",575
+"Precinct 114",134,"1,642",914
+"Precinct 115",84,"1,104",626
+"Precinct 116",98,"1,314",770
+"Precinct 117",155,"1,901",838
+"Precinct 118",81,"1,208",678
+"Precinct 119",93,"1,528",871
+"Precinct 120",96,"1,672",847
+"Precinct 121",146,"1,479",677
+"Precinct 122",148,"1,911",951
+"Precinct 123",93,"1,922",982
+"Precinct 124",46,"1,086",603
+"Precinct 125",215,"1,263",698
+"Precinct 126",46,770,446
+"Precinct 127",58,681,395
+"Precinct 128",99,"1,383",746
+"Precinct 129",137,"1,630",856
+"Precinct 130",58,871,402
+"Precinct 131",264,"2,170","1,038"
+Adams,81,"2,573","1,705"
+"Precinct 1 Indian Valley",1,211,156
+"Precinct 2 Council",22,620,414
+"Precinct 3 No. Council",28,781,563
+"Precinct 4 Bear",1,27,17
+"Precinct 5 New Meadows",26,848,509
+"Precinct 006 Little Salmon River",3,86,46
+Bannock,"2,984","40,143","23,471"
+"Precinct Absentee 32",0,0,37
+"Precinct Absentee 33",0,0,729
+"Precinct Absentee 34",0,0,959
+"Precinct Absentee 35",0,0,260
+"Precinct Arimo 41",11,315,171
+"Precinct Chubbuck 50",50,700,373
+"Precinct Chubbuck 51",39,728,422
+"Precinct Chubbuck 52",68,887,482
+"Precinct Chubbuck 53",53,826,405
+"Precinct Chubbuck 54",96,730,483
+"Precinct Chubbuck 55",50,872,494
+"Precinct Chubbuck 56",67,"1,087",565
+"Precinct Chubbuck 57",45,724,347
+"Precinct Downey 42",28,626,400
+"Precinct Inkom 43",65,"1,076",669
+"Precinct Lava Hot Springs 44",27,636,357
+"Precinct McCammon 45",43,942,578
+"Precinct Pocatello 1",62,737,437
+"Precinct Pocatello 10",45,905,443
+"Precinct Pocatello 11",57,784,363
+"Precinct Pocatello 12",37,902,481
+"Precinct Pocatello 13",41,779,358
+"Precinct Pocatello 14",43,875,460
+"Precinct Pocatello 15",51,767,389
+"Precinct Pocatello 16",39,498,229
+"Precinct Pocatello 17",50,651,348
+"Precinct Pocatello 18",44,723,424
+"Precinct Pocatello 19",35,685,362
+"Precinct Pocatello 2",1,745,472
+"Precinct Pocatello 20",53,718,333
+"Precinct Pocatello 21",69,734,422
+"Precinct Pocatello 22",93,957,529
+"Precinct Pocatello 23",58,802,456
+"Precinct Pocatello 24",74,697,352
+"Precinct Pocatello 25",49,710,266
+"Precinct Pocatello 26",95,821,345
+"Precinct Pocatello 27",121,662,339
+"Precinct Pocatello 28",125,671,347
+"Precinct Pocatello 29",95,804,374
+"Precinct Pocatello 3",41,620,396
+"Precinct Pocatello 30",46,670,339
+"Precinct Pocatello 36",85,628,371
+"Precinct Pocatello 37",68,824,462
+"Precinct Pocatello 38",57,731,422
+"Precinct Pocatello 39",68,810,385
+"Precinct Pocatello 4",72,870,446
+"Precinct Pocatello 40",27,773,454
+"Precinct Pocatello 46",92,972,533
+"Precinct Pocatello 47",53,779,411
+"Precinct Pocatello 48",57,923,553
+"Precinct Pocatello 49",51,844,533
+"Precinct Pocatello 5",75,970,519
+"Precinct Pocatello 6",92,961,389
+"Precinct Pocatello 7",32,661,331
+"Precinct Pocatello 8",53,608,298
+"Precinct Pocatello 9",36,723,369
+"Bear Lake",124,"3,580","2,074"
+"Precinct Bailey Creek",5,84,44
+"Precinct Bennington",5,150,94
+"Precinct Bern",3,96,68
+"Precinct Bloominton",6,152,96
+"Precinct Dingle",5,140,91
+"Precinct Fish Haven",6,112,52
+"Precinct Geneva",1,82,60
+"Precinct Georgetown",13,380,224
+"Precinct Liberty",6,249,159
+"Precinct Montpelier 1",19,570,317
+"Precinct Montpelier 2",15,483,239
+"Precinct Montpelier 3",7,133,70
+"Precinct Montpelier 4",13,374,212
+"Precinct Paris",6,380,211
+"Precinct Pegram",0,31,19
+"Precinct St Charles",14,164,118
+Benewah,123,"4,849","2,951"
+"Precinct 1 Benewah",7,167,99
+"Precinct 2 Center",2,447,297
+"Precinct 3 College",10,575,375
+"Precinct 4 Emida",2,143,75
+"Precinct 5 Fernwood",4,296,163
+"Precinct 6 Plummer",46,789,452
+"Precinct 7 Santa",6,216,144
+"Precinct 8 St. Joe",1,53,30
+"Precinct 9 St. Maries",9,950,554
+"Precinct 10 Tensed",15,397,247
+"Precinct 11 Townsite",21,816,515
+Bingham,"1,119","20,083","11,903"
+"Precinct 01 Blackfoot 1",82,"1,081",702
+"Precinct 02 Blackfoot 2",23,640,373
+"Precinct 03 Blackfoot 3",62,"1,024",578
+"Precinct 04 Blackfoot 4",69,"1,126",640
+"Precinct 05 Blackfoot 5",82,"1,257",703
+"Precinct 06 Blackfoot 6",70,"1,072",678
+"Precinct 07 Firth 7",34,998,645
+"Precinct 08 Firth 8",56,784,482
+"Precinct 09 Groveland 9",60,"1,020",644
+"Precinct 10 Jameston 10",20,646,357
+"Precinct 11 Moreland 11",71,"1,300",821
+"Precinct 12 Rockford 12",41,832,557
+"Precinct 13 Shelley 13",57,"1,016",559
+"Precinct 14 Shelley 14",69,"1,155",660
+"Precinct 15 Aberdeen 15",90,"1,153",636
+"Precinct 16 Springfield/Sterling 16",21,392,231
+"Precinct 17 Riverside 17",63,"1,268",794
+"Precinct 18 Pingree 18",18,633,431
+"Precinct 19 Wapello 19",37,436,284
+"Precinct 20 Fort Hall 20",33,846,305
+"Precinct 21 Shelley W. 21",21,905,525
+"Precinct 22 Groveland 22",40,499,298
+Blaine,273,"10,520","5,575"
+"Precinct 1 NW Ketchum",12,753,356
+"Precinct 2 SW Ketchum",25,"1,099",440
+"Precinct 3 N & E Ketchum",7,419,181
+"Precinct 4 S Ketchum",11,550,206
+"Precinct 5 NE Blaine County",19,696,333
+"Precinct 6 Hailey #1",19,935,462
+"Precinct 7 Hailey #2",32,993,487
+"Precinct 8 Hailey #3",36,"1,008",422
+"Precinct 9 Yale",0,10,9
+"Precinct 10 Bellevue",43,"1,034",534
+"Precinct 11 Gannett Picabo",8,379,161
+"Precinct 12 Carey",13,464,264
+"Precinct 13 Sun Valley",19,919,378
+"Precinct 14 Hailey #4",29,"1,261",662
+"Precinct 16 Absentee #1",0,0,680
+Boise,218,"4,496","2,309"
+"Precinct 30 Garden Valley",37,"1,308",572
+"Precinct 40 Horseshoe Bend",54,929,515
+"Precinct 50 Idaho City",35,673,306
+"Precinct 60 Lowman",10,188,100
+"Precinct 70 Mores Creek",69,"1,165",492
+"Precinct 80 Placerville",13,233,119
+"Precinct 90 Absentee",0,0,205
+Bonner,892,"19,241","11,382"
+"Precinct 1 Airport",86,"1,412",872
+"Precinct 2 Algoma",118,"1,944","1,210"
+"Precinct 3 Blue Lake",6,101,60
+"Precinct 4 Careywood",24,665,392
+"Precinct 5 Clark Fork",15,692,387
+"Precinct 6 Cocolalla",10,532,302
+"Precinct 7 Colburn",37,740,416
+"Precinct 9 Dover",15,361,217
+"Precinct 10 E Priest River",37,845,471
+"Precinct 11 Edgemere",44,796,436
+"Precinct 12 Gamlin Lake",15,415,269
+"Precinct 14 Grouse Crk",20,595,394
+"Precinct 15 Hope",24,733,490
+"Precinct 16 Humbird",14,245,136
+"Precinct 17 Kootenai",51,"1,182",706
+"Precinct 18 Laclede",10,349,205
+"Precinct 20 Lamb Creek",9,416,242
+"Precinct 21 Lincoln",40,771,394
+"Precinct 25 Newport",35,827,498
+"Precinct 26 Northside",5,132,80
+"Precinct 27 Oden",18,425,276
+"Precinct 28 Priest River",5,195,107
+"Precinct 29 Sandpoint",44,978,515
+"Precinct 30 Selle",27,606,386
+"Precinct 31 Spirit Valley",38,525,327
+"Precinct 32 Washington",76,"1,059",631
+"Precinct 33 W Branch",6,210,123
+"Precinct 34 Westmond",30,577,344
+"Precinct 35 W Priest River",26,658,335
+"Precinct 36 Wrenco",7,255,161
+Bonneville,"2,708","42,714","25,786"
+"Precinct 01",60,"1,249",792
+"Precinct 02",77,"1,139",590
+"Precinct 03",36,664,399
+"Precinct 04",63,861,485
+"Precinct 05",60,848,495
+"Precinct 06",128,"2,069","1,274"
+"Precinct 07",20,612,361
+"Precinct 08",60,742,356
+"Precinct 09",69,"1,031",526
+"Precinct 10",45,812,445
+"Precinct 11",36,622,385
+"Precinct 12",62,963,538
+"Precinct 13",61,863,409
+"Precinct 14",35,841,538
+"Precinct 15",60,"1,025",639
+"Precinct 16",72,"1,235",831
+"Precinct 17",50,906,555
+"Precinct 18",26,678,398
+"Precinct 19",39,934,581
+"Precinct 20",52,"1,072",719
+"Precinct 21",48,795,463
+"Precinct 22",29,550,303
+"Precinct 23",47,902,550
+"Precinct 24",95,"1,311",696
+"Precinct 25",105,"1,239",728
+"Precinct 26",65,"1,112",734
+"Precinct 27",79,"1,111",746
+"Precinct 36",41,647,443
+"Precinct 37",38,804,538
+"Precinct 38",28,476,315
+"Precinct 39",58,700,451
+"Precinct 40",70,920,590
+"Precinct 41",140,"1,684","1,062"
+"Precinct 42",19,508,315
+"Precinct 43",48,"1,005",607
+"Precinct 44",31,521,345
+"Precinct 45",61,694,394
+"Precinct 46",79,894,490
+"Precinct 47",47,739,382
+"Precinct 48",83,"1,166",697
+"Precinct 49",86,"1,013",612
+"Precinct 50",77,"1,223",788
+"Precinct 51",67,"1,062",713
+"Precinct 52",38,523,320
+"Precinct 53",82,"1,148",739
+"Precinct 54",12,341,200
+"Precinct 55",22,401,217
+"Precinct 56",0,36,21
+"Precinct 57",2,23,11
+Boundary,251,"5,393","3,172"
+"Precinct 1 Bonners Ferry",15,366,191
+"Precinct 2 Copeland",21,562,319
+"Precinct 3 Kootenai",18,676,386
+"Precinct 4 Moyie Springs",65,"1,124",667
+"Precinct 5 Naples",32,776,402
+"Precinct 6 N Bonners Ferry",39,985,687
+"Precinct 7 Valley View",61,904,520
+Butte,26,"1,984","1,227"
+"Precinct Arco 1",19,654,368
+"Precinct Arco 2",5,479,289
+"Precinct Howe",0,228,150
+"Precinct Moore",2,623,420
+Camas,34,662,455
+"Precinct 1",24,305,207
+"Precinct 2",10,357,248
+Canyon,"2,753","54,900","33,481"
+"Precinct 1",34,913,552
+"Precinct 3",39,"1,082",710
+"Precinct 4",26,779,453
+"Precinct 5",93,992,581
+"Precinct 6",34,740,425
+"Precinct 7",38,629,320
+"Precinct 8",31,"1,087",654
+"Precinct 9",48,879,514
+"Precinct 10",35,888,575
+"Precinct 11",29,900,650
+"Precinct 12",16,643,392
+"Precinct 13",67,"1,078",563
+"Precinct 15",46,839,458
+"Precinct 18",82,"1,032",671
+"Precinct 19",19,743,481
+"Precinct 20",143,"1,605","1,037"
+"Precinct 21",49,"1,194",744
+"Precinct 22",29,867,563
+"Precinct 23",72,"1,646","1,019"
+"Precinct 25",62,977,714
+"Precinct 27",18,463,290
+"Precinct 28",30,702,497
+"Precinct 29",71,"1,713",983
+"Precinct 30",36,"1,357",775
+"Precinct 32",62,"1,064",676
+"Precinct 33",140,"1,882",961
+"Precinct 34",57,977,500
+"Precinct 35",32,912,524
+"Precinct 36",69,"1,088",445
+"Precinct 37",125,"1,538",934
+"Precinct 38",78,813,375
+"Precinct 39",108,"1,111",786
+"Precinct 40",41,873,438
+"Precinct 42",31,714,397
+"Precinct 43",19,"1,065",723
+"Precinct 44",34,911,496
+"Precinct 45",48,"1,010",627
+"Precinct 46",25,942,581
+"Precinct 47",43,"1,026",588
+"Precinct 48",45,884,481
+"Precinct 49",35,980,678
+"Precinct 50",109,"1,587","1,164"
+"Precinct 51",41,"1,018",591
+"Precinct 52",24,686,381
+"Precinct 54",24,576,364
+"Precinct 55",47,"1,109",789
+"Precinct 56",89,"1,642","1,092"
+"Precinct 57",14,520,355
+"Precinct 58",55,"1,271",746
+"Precinct 59",111,"1,869","1,237"
+"Precinct 60",34,"1,049",726
+"Precinct 61",40,"1,107",745
+"Precinct 62",26,928,460
+Caribou,107,"4,115","2,380"
+"Precinct Absentee",0,0,134
+"Precinct Bancroft",25,696,414
+"Precinct Freedom",3,75,47
+"Precinct Grace 1",5,439,231
+"Precinct Grace 2",12,493,300
+"Precinct Soda 1",23,781,406
+"Precinct Soda 2",8,635,307
+"Precinct Soda 3",20,543,265
+"Precinct Soda 4",11,403,240
+"Precinct Wayan",0,50,36
+Cassia,443,"10,032","5,949"
+"Precinct 01 Albion",0,292,179
+"Precinct 02 Almo",5,103,69
+"Precinct 03 Bridge",2,62,38
+"Precinct 04 Burley 1",32,793,501
+"Precinct 05 Burley 2",28,552,248
+"Precinct 06 Burley 3",20,425,158
+"Precinct 07 Burley 4",38,764,366
+"Precinct 08 Burley 5",18,451,268
+"Precinct 09 Burley 6",16,280,116
+"Precinct 10 Burley 7",16,285,128
+"Precinct 11 Burley 8",27,635,350
+"Precinct 12 Declo",26,658,379
+"Precinct 13 Elba",6,121,75
+"Precinct 14 Heglar-Yale",2,130,67
+"Precinct 15 Jackson",12,205,129
+"Precinct 16 Malta",12,301,180
+"Precinct 17 Oakley 1",9,316,167
+"Precinct 18 Oakley 2",24,426,270
+"Precinct 19 Parsons",8,89,55
+"Precinct 20 Pella",21,409,249
+"Precinct 21 Springdale",24,475,286
+"Precinct 22 Starrah's Ferry",37,928,544
+"Precinct 23 Sublett",0,43,29
+"Precinct 24 Unity",43,965,547
+"Precinct 25 View",17,324,190
+"Precinct 26 Absentee",0,0,361
+Clark,13,615,404
+"Precinct 1",8,242,153
+"Precinct 2",2,164,123
+"Precinct 3",3,209,128
+Clearwater,210,"5,213","3,191"
+"Precinct 01 Orofino",40,671,324
+"Precinct 02 Orofino",33,615,367
+"Precinct 03 Orofino",29,716,427
+"Precinct 04 Orofino",20,460,256
+"Precinct 5 Orofino",28,745,440
+"Precinct 06 Fraser",0,106,56
+"Precinct 07 Greer",3,43,27
+"Precinct 08 Teakean",12,169,111
+"Precinct 9 Weippe",15,643,328
+"Precinct 10 Headquarters",0,48,27
+"Precinct 11 Ahsahka",14,290,164
+"Precinct 12 Pierce",10,467,251
+"Precinct 13 Elk River",5,135,83
+"Precinct 14 Grangemont",1,105,68
+"Precinct 15 Absentee",0,0,262
+Custer,145,"2,967","1,671"
+"Precinct 01 Challis 1",22,464,234
+"Precinct 02 Challis 2",13,246,113
+"Precinct 03 Round Valley 1",21,532,284
+"Precinct 04 Round Valley 2",13,345,205
+"Precinct 05 Mackay",20,387,242
+"Precinct 06 Leslie",29,343,224
+"Precinct 07 Battleground",5,102,70
+"Precinct 08 Sunol",6,73,41
+"Precinct 09 Clayton",4,230,112
+"Precinct 11 Stanley",12,245,146
+Elmore,444,"9,567","5,198"
+"Precinct Absentee 1",0,0,662
+"Precinct Absentee 2",0,0,18
+"Precinct Atlanta",0,45,31
+"Precinct Camas",3,17,12
+"Precinct Chattin Flats",0,69,25
+"Precinct Glenns Ferry",33,893,522
+"Precinct Hammett",9,188,130
+"Precinct King Hill",7,191,108
+"Precinct Mayfield",11,94,65
+"Precinct Mt. Home #2",61,"1,118",521
+"Precinct Mt. Home #3",50,"1,171",572
+"Precinct Mt. Home #4",28,706,329
+"Precinct Mt. Home #5",31,743,355
+"Precinct Mt. Home #6",70,"1,357",636
+"Precinct Mt. Home #7",43,948,455
+"Precinct Mt. Home #8",67,978,445
+"Precinct Mt. Home 1",25,866,215
+"Precinct Pine",5,113,61
+"Precinct Prairie",1,70,36
+Franklin,212,"5,245","3,393"
+"Precinct Banida-Winder 6",5,137,89
+"Precinct Clifton-Oxford 7",13,231,178
+"Precinct Dayton 8",15,390,248
+"Precinct Fairview 9",12,306,199
+"Precinct Franklin 10",17,421,270
+"Precinct Mapleton 11",6,146,99
+"Precinct Mink Creek 12",5,146,105
+"Precinct Preston 1",10,400,250
+"Precinct Preston 2",22,542,307
+"Precinct Preston 3",16,458,268
+"Precinct Preston 4",25,645,400
+"Precinct Preston 5",15,396,249
+"Precinct Riverdale 14",15,228,149
+"Precinct Thatcher-Cleveland 13",4,121,80
+"Precinct Weston 15",18,404,303
+"Precinct Whitney 16",14,274,199
+Fremont,267,"6,450","4,000"
+"Precinct Absentee 27",0,0,176
+"Precinct Absentee 28",0,0,174
+"Precinct 1 Ashton #1",14,523,288
+"Precinct 2 Ashton #2",21,629,366
+"Precinct 3 Chester/Twin Groves",24,564,302
+"Precinct 4 Drummond/Lamont",1,85,50
+"Precinct 5 Egin",37,443,277
+"Precinct 6 Island Park",31,634,266
+"Precinct 7 Newdale",6,231,140
+"Precinct 9 Parker",29,404,266
+"Precinct 10 Squirrel",3,79,51
+"Precinct 11 St Anthony 1",20,694,375
+"Precinct 12 St Anthony 2",24,441,235
+"Precinct 13 St Anthony 3",19,774,424
+"Precinct 14 Teton",14,382,240
+"Precinct 15 Warm River/Green Timber",6,114,78
+"Precinct 16 Wilford",18,453,292
+Gem,376,"7,987","4,901"
+"Precinct Absentee 1",0,0,422
+"Precinct Absentee 2",0,0,147
+"Precinct Bench",18,526,304
+"Precinct Brick",16,666,359
+"Precinct Butteview",31,696,364
+"Precinct Central",35,627,320
+"Precinct Emerson",38,853,453
+"Precinct Hanna",29,610,353
+"Precinct Letha",58,801,479
+"Precinct Lincoln",46,927,553
+"Precinct N. Emmett",22,527,235
+"Precinct Ola",3,119,78
+"Precinct S. Emmett",47,827,398
+"Precinct Sweet-Montour",18,369,226
+"Precinct W. Emmett",15,439,210
+Gooding,190,"7,053","4,079"
+"Precinct Absentee 21",0,0,254
+"Precinct Absentee 22",0,0,58
+"Precinct 1 E Gooding",12,740,388
+"Precinct 2 W Gooding",34,993,558
+"Precinct 3 Orchard Valley",14,423,207
+"Precinct 4 NW Gooding",11,626,343
+"Precinct 5 NE Gooding",22,657,393
+"Precinct 6 Bliss",16,415,236
+"Precinct 7 Tuttle",15,548,280
+"Precinct 8 Hagerman",14,839,426
+"Precinct 9 W. Point",8,234,119
+"Precinct 10 Wendell-Rural",10,466,263
+"Precinct 11 E Wendell",17,770,384
+"Precinct 12 W Wendell",17,342,170
+Idaho,335,"9,578","5,809"
+"Precinct Absentee 7",0,0,222
+"Precinct Absentee 8",0,0,265
+"Precinct 01 Big Butte",3,82,62
+"Precinct 02 Clearwater",2,202,110
+"Precinct 03 Cottonwood 1",20,397,248
+"Precinct 04 Cottonwood 2",12,429,263
+"Precinct 05 Elk City",13,313,164
+"Precinct 06 Fenn",1,145,91
+"Precinct 07 Ferdinand",6,205,143
+"Precinct 08 Greencreek",9,191,129
+"Precinct 09 Glover",10,156,100
+"Precinct 10 Grangeville 1",28,511,285
+"Precinct 11 Grangeville 2",34,591,270
+"Precinct 12 Grangeville 3",20,680,341
+"Precinct 13 Grangeville 4",21,577,385
+"Precinct 14 Grangeville 5",21,699,457
+"Precinct 15 Harpster",10,261,140
+"Precinct 16 Joseph",0,20,20
+"Precinct 17 Kamiah",39,927,461
+"Precinct 18 Keuterville",6,218,142
+"Precinct 19 Kooskia",39,"1,058",561
+"Precinct 20 Lowell",2,134,63
+"Precinct 21 Pollock",9,330,174
+"Precinct 22 Riggins",13,617,274
+"Precinct 23 Slate Creek",1,114,54
+"Precinct 24 Stites",6,318,177
+"Precinct 25 White Bird",5,260,114
+"Precinct 26 Woodland",5,143,94
+Jefferson,575,"9,523","6,169"
+"Precinct AB Absentee",0,15,314
+"Precinct 01 Annis",16,318,200
+"Precinct 02 Clark",42,539,316
+"Precinct 03 Garfield",49,777,455
+"Precinct 04 Grant",32,520,352
+"Precinct 05 Hamer",8,278,207
+"Precinct 06 Labelle",39,544,380
+"Precinct 07 Lewisville",21,650,396
+"Precinct 08 Lorenzo",13,197,123
+"Precinct 09 Menan",40,759,473
+"Precinct 10 Monteview",15,245,158
+"Precinct 11 Rigby 1",32,682,394
+"Precinct 12 Rigby 2",29,386,210
+"Precinct 13 Rigby 3",68,957,540
+"Precinct 14 Rigby 4",57,776,467
+"Precinct 15 Ririe",46,762,438
+"Precinct 16 Roberts",30,522,329
+"Precinct 17 Terreton",38,596,417
+Jerome,177,"8,532","4,831"
+"Precinct Absentee",0,0,359
+"Precinct Bishop",13,444,234
+"Precinct Canyonside",1,"1,150",662
+"Precinct Courthouse",0,387,195
+"Precinct Eden",20,511,275
+"Precinct Falls City",12,469,263
+"Precinct Grandview",9,356,199
+"Precinct Hazelton",45,946,587
+"Precinct Northeast",26,"1,121",525
+"Precinct Northwest",25,771,345
+"Precinct Shepherd",13,813,408
+"Precinct Southeast",12,636,299
+"Precinct Southwest",1,928,480
+Kootenai,"1,397","54,569","29,793"
+"Precinct Absentee Leg Dist 2",0,0,"1,475"
+"Precinct Absentee Leg Dist 3",0,0,"2,299"
+"Precinct Absentee Leg Dist 4",0,0,"1,238"
+"Precinct 1",35,"1,497",634
+"Precinct 2",53,"1,441",678
+"Precinct 3",9,617,288
+"Precinct 4",39,"1,455",662
+"Precinct 5",21,"1,192",540
+"Precinct 6",47,"1,721",713
+"Precinct 7",45,"1,444",700
+"Precinct 8",32,"1,064",536
+"Precinct 9",24,"1,143",575
+"Precinct 10",35,"1,241",549
+"Precinct 11",53,"1,486",698
+"Precinct 12",27,"1,370",679
+"Precinct 13",33,"1,571",803
+"Precinct 14",25,"1,012",422
+"Precinct 15",39,"1,427",603
+"Precinct 16",32,"1,553",640
+"Precinct 17",26,"1,800",756
+"Precinct 18",2,237,108
+"Precinct 19",19,696,290
+"Precinct 20",26,"1,229",580
+"Precinct 21",41,919,456
+"Precinct 22",24,797,353
+"Precinct 23",21,890,498
+"Precinct 24",26,912,501
+"Precinct 25",50,"1,774",722
+"Precinct 26",23,"1,362",583
+"Precinct 27",21,"1,065",473
+"Precinct 28",49,"1,681",754
+"Precinct 29",28,"1,048",372
+"Precinct 30",22,684,327
+"Precinct 31",17,878,363
+"Precinct 32",27,"1,518",696
+"Precinct 33",26,820,404
+"Precinct 34",34,"1,488",777
+"Precinct 35",30,945,353
+"Precinct 36",14,913,374
+"Precinct 37",24,"1,554",672
+"Precinct 38",19,766,457
+"Precinct 39",32,"1,366",450
+"Precinct 40",29,"1,317",611
+"Precinct 41",24,784,303
+"Precinct 42",35,"1,241",477
+"Precinct 43",29,738,300
+"Precinct 44",29,862,436
+"Precinct 45",22,529,279
+"Precinct 46",24,845,482
+"Precinct 47",7,416,189
+"Precinct 48",4,347,181
+"Precinct 49",32,479,264
+"Precinct 50",12,435,220
+Latah,"2,214","21,682","12,384"
+"Precinct 01 Moscow #1",130,630,214
+"Precinct 02 Moscow #2",101,873,415
+"Precinct 03 Moscow #3",108,972,478
+"Precinct 04 Moscow #4",66,844,512
+"Precinct 05 Moscow #5",68,940,628
+"Precinct 06 Moscow #6",129,925,365
+"Precinct 07 Moscow #7",182,807,358
+"Precinct 08 Moscow #8",142,817,302
+"Precinct 09 Moscow #9",73,906,569
+"Precinct 10 Moscow #10",71,806,410
+"Precinct 11 Moscow #11",0,921,495
+"Precinct 12 Moscow #12",78,915,545
+"Precinct 13 Moscow #13",77,800,405
+"Precinct 14 Moscow #14",108,815,271
+"Precinct 15 Moscow #15",73,829,490
+"Precinct 16 Moscow #16",162,956,426
+"Precinct 17 Moscow #17",56,896,501
+"Precinct 18 Moscow #18",164,927,355
+"Precinct 19 Deary",116,741,600
+"Precinct 20 Farmington",0,29,19
+"Precinct 21 Genesee",30,954,543
+"Precinct 22 Harvard",10,186,126
+"Precinct 23 Juliaetta",15,419,242
+"Precinct 24 Kendrick",16,375,237
+"Precinct 25 Linden",0,80,53
+"Precinct 26 Palouse",9,222,133
+"Precinct 27 Potlatch",39,875,469
+"Precinct 28 Princeton",20,376,247
+"Precinct 29 Troy",111,"1,178",760
+"Precinct 30 Viola",0,310,222
+"Precinct 31 Cora",10,165,112
+"Precinct 32 Bovill",50,193,159
+"Precinct 33 Absentee Dist 5",0,0,717
+"Precinct 34 Absentee Dist 7",0,0,6
+Lemhi,211,"4,849","3,488"
+"Precinct Absentee",0,0,361
+"Precinct Baker",5,247,170
+"Precinct Brooklyn",73,"1,453",908
+"Precinct Carmen",13,336,246
+"Precinct Depot",23,472,282
+"Precinct Fort Lemhi",3,120,76
+"Precinct Gibbonsville",2,119,78
+"Precinct Iron Creek",6,180,102
+"Precinct Junction",10,230,145
+"Precinct Mineral Hill",1,44,22
+"Precinct Noble",6,160,117
+"Precinct Pahsimeroi",7,94,59
+"Precinct Salmon",55,"1,296",846
+"Precinct Yearianville",7,98,76
+Lewis,70,"2,352","1,434"
+"Precinct Craigmont",13,468,283
+"Precinct E Kamiah",14,255,148
+"Precinct Mohler",3,62,44
+"Precinct Nezperce",5,515,352
+"Precinct Reubens",3,63,46
+"Precinct Slickpoo",0,16,11
+"Precinct W Kamiah",21,661,361
+"Precinct Winchester",11,312,189
+Lincoln,85,"2,093","1,238"
+"Precinct Dietrich #5",17,303,210
+"Precinct Kimama #6",4,46,21
+"Precinct N. Shoshone #3",18,318,173
+"Precinct Richfield #4",13,519,277
+"Precinct Shoshone #1",15,449,285
+"Precinct Shoshone #2",18,458,272
+Madison,823,"10,851","6,527"
+"Precinct Absentee",0,0,394
+"Precinct 1 Plano",30,413,249
+"Precinct 2 Hibbard",27,686,446
+"Precinct 3 Salem",25,373,241
+"Precinct 4 Sugar City",49,955,570
+"Precinct 5 Moody",13,219,148
+"Precinct 6 Burton",44,679,398
+"Precinct 7 Rexburg",58,"1,001",532
+"Precinct 8 Rexburg",100,"1,099",639
+"Precinct 9 Rexburg",110,"1,284",590
+"Precinct 10 Rexburg",169,888,318
+"Precinct 11 Rexburg",104,"1,349",779
+"Precinct 12 Rexburg",34,597,381
+"Precinct 13 Union/Lyman",32,791,490
+"Precinct 14 Archer",28,517,352
+Minidoka,253,"9,118","5,498"
+"Precinct Absentee",0,0,389
+"Precinct 01 Acequia",17,853,484
+"Precinct 02 Emerson",34,970,602
+"Precinct 03 Heyburn 1",32,971,479
+"Precinct 04 Heyburn 2",23,944,521
+"Precinct 05 Paul",27,885,510
+"Precinct 06 Pioneer",23,934,558
+"Precinct 07 Rupert 1",15,749,438
+"Precinct 08 Rupert 2",38,"1,191",641
+"Precinct 09 Rupert 3",19,614,316
+"Precinct 10 Rupert 4",6,338,184
+"Precinct 11 Rupert 5",19,669,376
+"Nez Perce",983,"22,119","13,380"
+"Precinct 1",18,371,139
+"Precinct 2",22,426,220
+"Precinct 3",32,437,235
+"Precinct 4",40,537,288
+"Precinct 5",19,473,303
+"Precinct 6",19,415,203
+"Precinct 7",52,857,439
+"Precinct 8",24,657,442
+"Precinct 9",46,825,478
+"Precinct 10",17,707,405
+"Precinct 11",27,561,374
+"Precinct 12",37,899,659
+"Precinct 13",36,967,630
+"Precinct 14",32,750,432
+"Precinct 15",44,817,473
+"Precinct 16",37,785,454
+"Precinct 17",36,743,444
+"Precinct 18",24,851,528
+"Precinct 19",16,503,323
+"Precinct 20",22,770,474
+"Precinct 21",35,871,554
+"Precinct 22",31,720,416
+"Precinct 23",44,833,503
+"Precinct 24",27,968,623
+"Precinct 25",31,989,650
+"Precinct 26",53,865,534
+"Precinct 30",17,432,237
+"Precinct 31",5,184,129
+"Precinct 32",19,453,254
+"Precinct 33",34,646,349
+"Precinct 34",10,261,180
+"Precinct 35",6,213,149
+"Precinct 36",16,249,165
+"Precinct 37",3,122,82
+"Precinct 38",17,324,208
+"Precinct 39",19,438,278
+"Precinct 40",16,200,126
+Oneida,81,"2,288","1,280"
+"Precinct Curlew",6,128,67
+"Precinct Holbrook",1,92,58
+"Precinct Malad 1",13,606,334
+"Precinct Malad 2",26,608,331
+"Precinct Malad 3",24,547,332
+"Precinct Malad 4",11,307,158
+Owyhee,214,"4,677","2,762"
+"Precinct 01 N. Homedale",35,824,378
+"Precinct 02 S. Homedale",41,937,478
+"Precinct 03 N. Marsing",25,467,350
+"Precinct 04 S. Marsing",26,623,320
+"Precinct 05 Pleasant Valley",2,84,59
+"Precinct 06 Wilson",26,369,232
+"Precinct 07 Murphy",16,189,121
+"Precinct 08 Oreana",3,116,73
+"Precinct 09 Grand View",16,522,292
+"Precinct 10 Bruneau",18,403,268
+"Precinct 11 Riddle",3,93,39
+"Precinct 12 Three Creek",3,50,21
+"Precinct 99 Absentee",0,0,131
+Payette,519,"9,481","5,434"
+"Precinct 1",34,"1,071",524
+"Precinct 2",118,"1,681","1,048"
+"Precinct 3",42,862,458
+"Precinct 4",22,522,291
+"Precinct 5",76,"1,178",668
+"Precinct 6",57,"1,133",642
+"Precinct 7",4,277,167
+"Precinct 8",98,"1,518",896
+"Precinct 9",66,"1,116",670
+"Precinct 10",2,123,70
+Power,97,"3,755","2,222"
+"Precinct 01 Power Cnty 1",15,836,479
+"Precinct 02 Power Cnty 2",22,"1,026",538
+"Precinct 03 Power Cnty 3",29,994,540
+"Precinct 04 Rockland",11,416,210
+"Precinct 05 Arbon",2,87,72
+"Precinct 06 E Power Cnty",18,396,225
+"Precinct 07 Absentee",0,0,158
+Shoshone,116,"7,931","4,138"
+"Precinct Absentee",0,0,237
+"Precinct 1 Murray/Prichard",3,184,117
+"Precinct 02-Mullan",9,554,313
+"Precinct 03-Wallace",7,521,233
+"Precinct 04-Silverton",5,374,182
+"Precinct 4 Wallace",7,429,207
+"Precinct 05-Osburn",7,588,342
+"Precinct 7 Osburn",7,672,337
+"Precinct 8 Kellogg",9,458,186
+"Precinct 9 Kellogg",12,831,412
+"Precinct 10 Kellogg",7,450,207
+"Precinct 11 Wardner",0,117,43
+"Precinct 12 Smelterville",6,423,186
+"Precinct 13 Pinehurst",1,311,140
+"Precinct 14 Pinehurst",11,914,421
+"Precinct 15 Kingston/Cataldo",16,831,423
+"Precinct 16 Calder",4,144,80
+"Precinct 17 Clarkia",2,73,38
+"Precinct 18 Avery",3,57,34
+Teton,134,"3,319","1,820"
+"Precinct 1 Victor",46,"1,064",561
+"Precinct 2 Driggs",63,"1,502",810
+"Precinct 3 Tetonia",21,610,371
+"Precinct 4 Felt",4,143,78
+"Twin Falls",799,"30,378","17,641"
+"Precinct Absentee",0,0,"1,303"
+"Precinct Buhl 1",20,694,381
+"Precinct Buhl 2",12,575,328
+"Precinct Buhl 3",5,412,243
+"Precinct Buhl 4",20,671,330
+"Precinct Buhl 5",12,385,193
+"Precinct Buhl 6",6,252,145
+"Precinct Buhl 7",23,775,417
+"Precinct Castleford 1",5,468,265
+"Precinct Clover 1",5,188,106
+"Precinct Deep Creek 1",22,596,304
+"Precinct Filer 1",19,767,398
+"Precinct Filer 2",23,"1,018",557
+"Precinct Filer 3",23,725,407
+"Precinct Hansen 1",36,"1,043",522
+"Precinct Hollister 1",11,558,323
+"Precinct Kimberly 1",24,669,366
+"Precinct Kimberly 2",10,913,532
+"Precinct Kimberly 3",7,396,239
+"Precinct Maroa 1",10,284,161
+"Precinct Murtaugh 1",21,545,231
+"Precinct Out Twin Falls 21",11,"1,165",712
+"Precinct Out Twin Falls 22",17,798,516
+"Precinct Out Twin Falls 23",12,499,315
+"Precinct Out Twin Falls 24",6,587,335
+"Precinct Twin Falls 1",25,718,328
+"Precinct Twin Falls 10",10,503,243
+"Precinct Twin Falls 11",10,728,468
+"Precinct Twin Falls 12",11,577,343
+"Precinct Twin Falls 13",40,"1,507",919
+"Precinct Twin Falls 14",12,625,360
+"Precinct Twin Falls 15",38,659,358
+"Precinct Twin Falls 16",16,575,291
+"Precinct Twin Falls 17",30,787,392
+"Precinct Twin Falls 18",38,"1,068",468
+"Precinct Twin Falls 19",49,"1,304",741
+"Precinct Twin Falls 2",12,528,214
+"Precinct Twin Falls 20",2,150,58
+"Precinct Twin Falls 3",15,621,328
+"Precinct Twin Falls 4",16,971,458
+"Precinct Twin Falls 5",22,"1,069",540
+"Precinct Twin Falls 6",23,676,321
+"Precinct Twin Falls 7",37,"1,071",484
+"Precinct Twin Falls 8",18,822,440
+"Precinct Twin Falls 9",15,436,258
+Valley,289,"5,920","3,268"
+"Precinct Absentee",0,0,557
+"Precinct Alpha",14,323,170
+"Precinct Cascade",20,734,361
+"Precinct Donnelly",4,100,47
+"Precinct McCall",113,"1,872",749
+"Precinct Payette",58,849,409
+"Precinct Roseberry",58,"1,376",644
+"Precinct W. Mountain",22,572,290
+"Precinct Yellow Pine",0,94,41
+Washington,139,"5,353","3,438"
+"Precinct 01 Eaton Hale",19,791,542
+"Precinct 02 W. Weiser",13,453,269
+"Precinct 03 S. Weiser",8,464,238
+"Precinct 04 Weiser",19,598,397
+"Precinct 05 Middle Weiser",5,439,231
+"Precinct 06 E. Weiser",19,441,322
+"Precinct 07 Midvale",15,452,348
+"Precinct 08 Cambridge",10,713,442
+"Precinct 09 Pioneer",18,568,354
+"Precinct 10 Sunnyside",13,434,295
+Totals,"36,522","661,433","386,720"
+
