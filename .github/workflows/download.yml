@@ -1,0 +1,49 @@
+name: Download canvass site contest files
+on:
+  push:
+    branches: [download]
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: download-canvass
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Get the repo
+        env:
+          TOKEN: ${{ github.token }}
+        run: |
+          AUTH=$(printf 'x-access-token:%s' "$TOKEN" | base64 -w0)
+          echo "::add-mask::$AUTH"
+          git init -q .
+          git config http.https://github.com/.extraheader "AUTHORIZATION: basic $AUTH"
+          git remote add origin "https://github.com/$GITHUB_REPOSITORY"
+          git fetch -q --depth=1 origin "$GITHUB_REF_NAME"
+          git checkout -q -B "$GITHUB_REF_NAME" FETCH_HEAD
+      - name: Download each contest's own file
+        run: |
+          python3 -I download.py canvass.sos.idaho.gov 2>&1 | tee "$RUNNER_TEMP/download.log" || echo "Some downloads failed; saving the rest."
+      - name: Rebuild the database and its check
+        run: python3 -I build_db.py canvass.sos.idaho.gov results.sqlite > CHECK.txt
+      - name: Save the files to the repo
+        id: save
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          [ -d canvass.sos.idaho.gov ] || { echo "Nothing downloaded."; exit 0; }
+          git add canvass.sos.idaho.gov results.sqlite CHECK.txt
+          git diff --cached --quiet && { echo "Nothing new downloaded."; exit 0; }
+          git commit -q -m "Canvass site contest files as downloaded, and the rebuilt database"
+          git push origin "HEAD:$GITHUB_REF_NAME"
+          echo "saved=1" >> "$GITHUB_OUTPUT"
+      - name: Start the next run if this one stopped at its time limit and saved something
+        if: steps.save.outputs.saved == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          grep -q '^STOPPED at' "$RUNNER_TEMP/download.log" || exit 0
+          gh workflow run download.yml --repo "$GITHUB_REPOSITORY" --ref "$GITHUB_REF_NAME"

@@ -1,0 +1,10 @@
+Precinct,"Yes
+None/Unknown","No
+None/Unknown","Total Votes Cast",Undervotes,Overvotes,"Total Ballots Cast"
+"001 Indian Valley",143,32,175,39,0,214
+"002 Council",519,104,623,95,0,718
+"003 N. Council",510,92,602,101,0,703
+"005 New Meadows",738,112,850,165,1,"1,016"
+"006 Little Salmon River",56,11,67,5,0,72
+Totals,"1,966",351,"2,317",405,1,"2,723"
+
