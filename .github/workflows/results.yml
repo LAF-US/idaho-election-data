@@ -1,0 +1,92 @@
+name: Download election-night results
+on:
+  push:
+    branches: [results]
+  workflow_dispatch:
+  schedule:
+    - cron: '7 * * * *'   # every hour; download_results.py --scheduled decides what is due
+permissions: {}
+env:
+  DATA_BRANCH: results   # every run saves the results site's files to this branch
+concurrency:
+  group: download-results
+jobs:
+  keep-schedule-on:
+    # GitHub turns off a public repo's schedules after 60 days with no repo activity. Between
+    # elections nothing gets committed, so each scheduled run re-enables this workflow instead.
+    # This job alone holds actions: write, so the download job's code never gets that permission.
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: write
+    steps:
+      - name: Keep the hourly schedule switched on
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X PUT "repos/$GITHUB_REPOSITORY/actions/workflows/results.yml/enable"
+  download:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    permissions:
+      contents: write
+    steps:
+      - name: Get the script and the results branch
+        # The script comes from the commit that started this run (main, for the schedule). The files
+        # it downloads go to the results branch, which nothing protects, so main needs no change.
+        env:
+          TOKEN: ${{ github.token }}
+        run: |
+          AUTH=$(printf 'x-access-token:%s' "$TOKEN" | base64 -w0)
+          echo "::add-mask::$AUTH"
+          git init -q .
+          git config http.https://github.com/.extraheader "AUTHORIZATION: basic $AUTH"
+          git remote add origin "https://github.com/$GITHUB_REPOSITORY"
+          git fetch -q --depth=1 origin "$GITHUB_SHA"
+          git show FETCH_HEAD:download_results.py > "$RUNNER_TEMP/download_results.py"
+          git fetch -q --depth=1 origin "$DATA_BRANCH" || git fetch -q --depth=1 origin "$GITHUB_SHA"
+          git checkout -q -B "$DATA_BRANCH" FETCH_HEAD
+      - name: Download the results site's files and save them to the repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          save() {
+            [ -d results.voteidaho.gov ] || { echo "Nothing downloaded."; return 0; }
+            git add results.voteidaho.gov
+            for f in results_official.txt results_daily.txt; do if [ -f "$f" ]; then git add "$f"; fi; done
+            if git diff --cached --quiet; then
+              echo "Nothing new from the results site."
+            else
+              git commit -q -m "Results site files as served" || return 1
+              UNPUSHED=1
+            fi
+            # A commit an earlier pull in this run couldn't push is pushed now too, even when nothing new came.
+            [ "$UNPUSHED" = 1 ] || return 0
+            # If someone else pushed to the branch since this run fetched it, put this commit on top and push again.
+            if git push origin "HEAD:$DATA_BRANCH" || {
+              git fetch -q origin "$DATA_BRANCH" && git rebase -q FETCH_HEAD && git push origin "HEAD:$DATA_BRANCH"
+            }; then UNPUSHED=0; else return 1; fi
+          }
+          UNPUSHED=0
+          START=$(date +%s)   # pulls run at minutes 5 to 55 counted from here; the next hourly run takes over at 60
+          FAILED=0
+          FLAG=""
+          if [ "$GITHUB_EVENT_NAME" = schedule ]; then FLAG=--scheduled; fi
+          python3 -I "$RUNNER_TEMP/download_results.py" . $FLAG || FAILED=1
+          save || FAILED=1
+          # In the first 24 hours after poll close, keep going and pull every 5 minutes until the next
+          # hourly run is due. At any other time this loop doesn't run.
+          if [ "$GITHUB_EVENT_NAME" = schedule ]; then
+            END=$(( START + 55 * 60 ))
+            NEXT=$(( START + 300 ))
+            while python3 -I "$RUNNER_TEMP/download_results.py" . --in-first-day && [ "$NEXT" -le "$END" ] && [ "$(date +%s)" -lt "$END" ]; do
+              # Each pull starts 5 minutes after the last one started, however long that one took.
+              WAIT=$(( NEXT - $(date +%s) ))
+              if [ "$WAIT" -gt 0 ]; then sleep "$WAIT"; fi
+              NEXT=$(( NEXT + 300 ))
+              python3 -I "$RUNNER_TEMP/download_results.py" . --every-5-minutes || FAILED=1
+              save || FAILED=1
+            done
+          fi
+          # Files that downloaded are saved above; the run still shows as failed if any didn't, or if a save didn't push.
+          if [ "$FAILED" = 1 ]; then echo "Some downloads or saves failed; the next run tries them again."; exit 1; fi
