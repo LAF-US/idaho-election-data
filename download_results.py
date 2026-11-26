@@ -33,9 +33,13 @@ hour), from the current time and its tracking files:
     --every-5-minutes, which pulls only an election within 24 hours of poll close; --in-first-day
     exits 0 while one is, so the workflow knows whether to keep going.
   - After that: that election once a day, from the 15:00 UTC run (a later run that day tries again
-    until one pulls it without a failure; OUTDIR/results_daily.txt keeps the day), until its saved status says
-    isOfficialResults and a run has pulled all its files after that, or 45 days after poll close,
-    whichever comes first. The run that does writes the election to OUTDIR/results_official.txt.
+    until one pulls it without a failure; OUTDIR/results_daily.txt keeps the day), through the day after
+    the canvass deadline the statutes set. For the primary and general elections (the May and November
+    days of 34-106(1) in even years), the state board of canvassers meets within 21 days after the
+    election (Idaho Code 34-1211). For every other election, the county board of canvassers meets
+    within 9 days after it (Idaho Code 34-1205 and 34-1410). So the last daily pull is on election day
+    plus 22 days, or plus 10 days. The site's isOfficialResults flag doesn't stop the daily pulls: the
+    site set it for nov2026 on Nov 20, 2026, four days before the state canvass on Nov 24.
 Without --scheduled, it pulls every election the site lists.
 
   python3 download_results.py OUTDIR [--scheduled | --every-5-minutes | --in-first-day]
@@ -133,9 +137,10 @@ def reports(status):
                 yield f'{SITE}/cdn/results/{urllib.parse.quote(folder, safe="")}/{urllib.parse.quote(name, safe="")}'
 
 
-HOURLY_DAYS, DAILY_HOUR, MAX_DAYS, FIVE_MINUTE_HOURS = 3, 15, 45, 24
+HOURLY_DAYS, DAILY_HOUR, FIVE_MINUTE_HOURS = 3, 15, 24
+STATE_CANVASS_DAYS, COUNTY_CANVASS_DAYS = 21, 9   # Idaho Code 34-1211; 34-1205 and 34-1410
 BOISE, POLLS_CLOSE = zoneinfo.ZoneInfo('America/Boise'), 21   # 9 PM Mountain
-OFFICIAL, DAILY = 'results_official.txt', 'results_daily.txt'
+DAILY = 'results_daily.txt'
 MON = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
 
 
@@ -154,15 +159,6 @@ def daily_done(out):
             return dict(line.split() for line in f if len(line.split()) == 2)
     except OSError:
         return {}
-
-
-def official_done(out):
-    """The elections a run has pulled in full after their status said isOfficialResults."""
-    try:
-        with open(os.path.join(out, OFFICIAL)) as f:
-            return {line.strip() for line in f if line.strip()}
-    except OSError:
-        return set()
 
 
 def election_days_listed(out, now):
@@ -188,24 +184,36 @@ def poll_close(day):
     return dt.datetime(day.year, day.month, day.day, POLLS_CLOSE, tzinfo=BOISE).astimezone(dt.timezone.utc)
 
 
+def last_daily(day):
+    """The last day of an election's daily pulls: the day after its canvass deadline. The primary and the
+    general (34-106(1)'s May and November days in an even year) have the state canvass within 21 days
+    (34-1211); every other election has only the county canvass, within 9 days (34-1205, 34-1410)."""
+    state = day.year % 2 == 0 and day in election_days(day.year)
+    return day + dt.timedelta(days=(STATE_CANVASS_DAYS if state else COUNTY_CANVASS_DAYS) + 1)
+
+
+def in_daily(day, now):
+    """True when an election on day is past its 72 hourly hours and not past its last daily pull."""
+    return now - poll_close(day) >= dt.timedelta(days=HOURLY_DAYS) and now.date() <= last_daily(day)
+
+
 def daily_phase(out, election, now):
-    """True when election is past its 72 hourly hours and inside its 45 days."""
+    """True when election is in its daily pulls."""
     for name, day in election_days_listed(out, now):
         if name == election:
-            return dt.timedelta(days=HOURLY_DAYS) <= now - poll_close(day) < dt.timedelta(days=MAX_DAYS)
+            return in_daily(day, now)
     return False
 
 
 def window(out, now):
     """The elections in an election-day window at this hour: hourly for 72 hours from poll close, then
-    the 15:00 UTC run each day until the saved status says official, or 45 days after poll close."""
-    found, done, daily = [], official_done(out), daily_done(out)
+    the 15:00 UTC run each day through the day after the canvass deadline (last_daily)."""
+    found, daily = [], daily_done(out)
     for election, day in election_days_listed(out, now):
         age = now - poll_close(day)
         if dt.timedelta(0) <= age < dt.timedelta(days=HOURLY_DAYS):
             found.append(election)
-        elif dt.timedelta(days=HOURLY_DAYS) <= age < dt.timedelta(days=MAX_DAYS) and now.hour >= DAILY_HOUR \
-                and election not in done and daily.get(election) != f'{now:%Y-%m-%d}':
+        elif in_daily(day, now) and now.hour >= DAILY_HOUR and daily.get(election) != f'{now:%Y-%m-%d}':
             found.append(election)
     return found
 
@@ -282,10 +290,6 @@ def main(out, scheduled=False, now=None, every_5=False):
             daily[election] = f'{now:%Y-%m-%d}'
             with open(os.path.join(out, DAILY), 'w') as f:
                 f.writelines(f'{e} {d}\n' for e, d in sorted(daily.items()))
-        if isinstance(status, dict) and status.get('isOfficialResults') and failed == before and election not in official_done(out):
-            with open(os.path.join(out, OFFICIAL), 'a') as f:
-                f.write(f'{election}\n')
-            print(f'{election}: official, all files pulled.', flush=True)
     print(f'Done, {failed} failed.', flush=True)
     return 1 if failed else 0
 
